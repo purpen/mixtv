@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.stephen.tv.R;
+import com.taihuoniao.fineix.tv.R;
 import com.taihuoniao.fineix.tv.activity.ActivityLogin;
 import com.taihuoniao.fineix.tv.adapter.CFragmentPagerAdapter;
 import com.taihuoniao.fineix.tv.adapter.TitleRecyclerViewAdapter;
@@ -30,9 +30,9 @@ import com.taihuoniao.fineix.tv.common.HttpRequestCallback;
 import com.taihuoniao.fineix.tv.common.URL;
 import com.taihuoniao.fineix.tv.common.WaittingDialog;
 import com.taihuoniao.fineix.tv.fragment.ListFragment;
-import com.taihuoniao.fineix.tv.utils.OkHttpUtil;
 import com.taihuoniao.fineix.tv.utils.JsonUtil;
 import com.taihuoniao.fineix.tv.utils.LogUtil;
+import com.taihuoniao.fineix.tv.utils.OkHttpUtil;
 import com.taihuoniao.fineix.tv.utils.SPUtil;
 import com.taihuoniao.fineix.tv.utils.ToastUtil;
 

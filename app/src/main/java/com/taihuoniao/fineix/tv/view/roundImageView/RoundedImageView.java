@@ -33,7 +33,7 @@ import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
-import com.stephen.tv.R;
+import com.taihuoniao.fineix.tv.R;
 
 
 @SuppressWarnings("UnusedDeclaration")

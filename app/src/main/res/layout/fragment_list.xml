@@ -12,7 +12,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:focusable="false"
-        tools:context="com.stephen.tv.com.taihuoniao.fineix.tv.MainActivity"
+        tools:context="com.taihuoniao.fineix.tv.MainActivity"
         tools:deviceIds="tv"
         tools:ignore="MergeRootFrame" />
 </LinearLayout>

@@ -13,7 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.stephen.tv.R;
+
+import com.taihuoniao.fineix.tv.R;
 
 import java.util.ArrayList;
 

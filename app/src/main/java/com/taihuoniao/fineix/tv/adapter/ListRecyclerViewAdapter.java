@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.taihuoniao.fineix.tv.R;
 import com.taihuoniao.fineix.tv.bean.ProductBean;
 import com.taihuoniao.fineix.tv.common.App;
 import com.taihuoniao.fineix.tv.common.CommonConstants;
 import com.taihuoniao.fineix.tv.common.GlobalCallBack;
-import com.stephen.tv.R;
 import com.taihuoniao.fineix.tv.utils.GlideUtil;
 
 import java.util.List;

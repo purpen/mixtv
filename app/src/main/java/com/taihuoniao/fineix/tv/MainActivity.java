@@ -19,7 +19,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
-import com.stephen.tv.R;
 import com.taihuoniao.fineix.tv.activity.ActivityLogin;
 import com.taihuoniao.fineix.tv.base.BaseActivity;
 import com.taihuoniao.fineix.tv.bean.LoginInfoBean;

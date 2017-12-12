@@ -9,24 +9,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.google.gson.reflect.TypeToken;
-import com.stephen.tv.R;
-import com.taihuoniao.fineix.tv.bean.ProductBean;
-import com.taihuoniao.fineix.tv.common.App;
-import com.taihuoniao.fineix.tv.common.CommonConstants;
-import com.taihuoniao.fineix.tv.common.HttpRequestCallback;
-import com.taihuoniao.fineix.tv.common.RecycleViewItemDecoration;
+import com.taihuoniao.fineix.tv.R;
 import com.taihuoniao.fineix.tv.activity.DetailsActivity;
 import com.taihuoniao.fineix.tv.adapter.ListRecyclerViewAdapter;
 import com.taihuoniao.fineix.tv.base.BaseFragment;
 import com.taihuoniao.fineix.tv.bean.HttpResponseBean;
+import com.taihuoniao.fineix.tv.bean.ProductBean;
+import com.taihuoniao.fineix.tv.common.App;
+import com.taihuoniao.fineix.tv.common.CommonConstants;
 import com.taihuoniao.fineix.tv.common.GlobalCallBack;
+import com.taihuoniao.fineix.tv.common.HttpRequestCallback;
+import com.taihuoniao.fineix.tv.common.RecycleViewItemDecoration;
 import com.taihuoniao.fineix.tv.common.URL;
 import com.taihuoniao.fineix.tv.common.WaittingDialog;
-import com.taihuoniao.fineix.tv.utils.OkHttpUtil;
 import com.taihuoniao.fineix.tv.utils.JsonUtil;
 import com.taihuoniao.fineix.tv.utils.LogUtil;
+import com.taihuoniao.fineix.tv.utils.OkHttpUtil;
 import com.taihuoniao.fineix.tv.utils.ToastUtil;
 
 import java.io.IOException;

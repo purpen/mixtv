@@ -6,7 +6,7 @@ import android.os.SystemClock;
 import android.view.KeyEvent;
 
 import com.google.gson.reflect.TypeToken;
-import com.stephen.tv.R;
+import com.taihuoniao.fineix.tv.R;
 import com.taihuoniao.fineix.tv.base.BaseActivity;
 import com.taihuoniao.fineix.tv.bean.BuyGoodDetailsBean;
 import com.taihuoniao.fineix.tv.bean.HttpResponseBean;
@@ -14,8 +14,8 @@ import com.taihuoniao.fineix.tv.common.HttpRequestCallback;
 import com.taihuoniao.fineix.tv.common.URL;
 import com.taihuoniao.fineix.tv.common.WaittingDialog;
 import com.taihuoniao.fineix.tv.fragment.DetailsFragment;
-import com.taihuoniao.fineix.tv.utils.OkHttpUtil;
 import com.taihuoniao.fineix.tv.utils.JsonUtil;
+import com.taihuoniao.fineix.tv.utils.OkHttpUtil;
 import com.taihuoniao.fineix.tv.utils.ToastUtil;
 
 import java.io.IOException;

@@ -6,8 +6,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.taihuoniao.fineix.tv.R;
 import com.taihuoniao.fineix.tv.common.App;
-import com.stephen.tv.R;
 
 
 public class ToastUtil {

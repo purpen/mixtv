@@ -3,7 +3,6 @@ package com.taihuoniao.fineix.tv.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-
 import com.taihuoniao.fineix.tv.base.BaseFragment;
 
 import java.util.List;

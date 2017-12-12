@@ -6,8 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-
-import com.stephen.tv.R;
+import com.taihuoniao.fineix.tv.R;
 import com.taihuoniao.fineix.tv.activity.DetailsActivity;
 import com.taihuoniao.fineix.tv.common.WaittingDialog;
 import com.taihuoniao.fineix.tv.utils.GlideUtil;

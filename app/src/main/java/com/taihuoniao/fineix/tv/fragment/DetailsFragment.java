@@ -11,9 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import com.google.zxing.WriterException;
-import com.stephen.tv.R;
+import com.taihuoniao.fineix.tv.R;
 import com.taihuoniao.fineix.tv.base.BaseFragment;
 import com.taihuoniao.fineix.tv.bean.BuyGoodDetailsBean;
 import com.taihuoniao.fineix.tv.common.App;
@@ -21,7 +20,6 @@ import com.taihuoniao.fineix.tv.common.CommonConstants;
 import com.taihuoniao.fineix.tv.utils.QrCodeUtil;
 import com.taihuoniao.fineix.tv.view.autoScrollViewpager.ScrollableView;
 import com.taihuoniao.fineix.tv.view.autoScrollViewpager.ViewPagerAdapter;
-
 
 import java.util.List;
 

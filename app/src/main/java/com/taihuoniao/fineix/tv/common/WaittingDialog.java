@@ -8,7 +8,8 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
-import com.stephen.tv.R;
+import com.taihuoniao.fineix.tv.R;
+
 
 /**
  * Created by taihuoniao on 2016/1/21.

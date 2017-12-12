@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-
 import com.taihuoniao.fineix.tv.common.CommonConstants;
 import com.taihuoniao.fineix.tv.utils.JsonUtil;
 import com.taihuoniao.fineix.tv.utils.SPUtil;

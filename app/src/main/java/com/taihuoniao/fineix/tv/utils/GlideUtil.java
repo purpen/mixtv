@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.stephen.tv.R;
+import com.taihuoniao.fineix.tv.R;
 import com.taihuoniao.fineix.tv.common.App;
 
 /**
