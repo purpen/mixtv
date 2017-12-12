@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_login_landscape"
+    tools:context="com.stephen.tv.com.taihuoniao.fineix.tv.activity.ActivityLogin">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="150dp"
+            android:src="@mipmap/icon_bg_logo" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp">
+
+            <EditText
+                android:id="@+id/et_phone"
+                style="@style/RegisterAndLogin"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/shape_login_register"
+                android:hint="手机号"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:paddingLeft="8dp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#666666" />
+            <!--android:inputType="phone"-->
+            <!--android:focusable="true"-->
+            <!--android:focusableInTouchMode="true"-->
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <EditText
+                android:id="@+id/et_password"
+                style="@style/RegisterAndLogin"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/shape_login_register"
+                android:hint="密码"
+                android:inputType="textPassword|numberPassword"
+                android:maxLength="50"
+                android:maxLines="1"
+                android:paddingLeft="8dp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#666666" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/bt_login"
+                style="@style/RegisterAndLogin"
+                android:layout_width="match_parent"
+                android:layout_marginRight="0dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/shape_login_register"
+                android:text="登录"
+                android:textColor="#af8323" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

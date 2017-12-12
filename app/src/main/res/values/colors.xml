@@ -1,0 +1,100 @@
+<resources>
+
+    <!--AppThemeColors-->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="background_gradient_start">#000000</color>
+    <color name="background_gradient_end">#DDDDDD</color>
+    <color name="fastlane_background">#0096a6</color>
+    <color name="search_opaque">#ffaa3f</color>
+    <color name="selected_background">#ffaa3f</color>
+    <color name="default_background">#3d3d3d</color>
+
+
+    <!-- From: file:/Users/Sai/Documents/workpace/android/github/Android-SVProgressHUD/svprogresshud/src/main/res/values/colors.xml -->
+    <eat-comment/>
+    <color name="bgColor_overlay">#60000000</color>
+    <color name="bgColor_overlay_black">#95000000</color>
+    <color name="bgColor_svprogressdefaultview">@android:color/white</color>
+    <color name="roundColor_svprogresshuddefault">#e5e5e5</color>
+    <color name="roundProgressColor_svprogresshuddefault">@android:color/black</color>
+    <color name="textColor_svprogresshuddefault_msg">#000000</color>
+    <declare-styleable name="SVCircleProgressBar">
+        <attr name="roundColor" format="color"/>
+        <attr name="roundProgressColor" format="color"/>
+        <attr name="roundWidth" format="dimension"/>
+        <attr name="max" format="integer"/>
+        <attr name="style">
+            <enum name="STROKE" value="0"/>
+            <enum name="FILL" value="1"/>
+        </attr>
+    </declare-styleable>
+    <!-- From: file:/Users/Sai/Documents/workpace/android/github/Android-SVProgressHUD/svprogresshud/src/main/res/values/dimens.xml -->
+    <eat-comment/>
+    <dimen name="margintop_svprogresshuddefault_msg">10dp</dimen>
+    <dimen name="padding_svprogresshuddefault">15dp</dimen>
+    <dimen name="radius_svprogresshuddefault">25px</dimen>
+    <dimen name="size_image_bigloading">80dp</dimen>
+    <dimen name="size_image_smallloading">60dp</dimen>
+    <dimen name="size_minwidth_svprogresshuddefault">120dp</dimen>
+    <dimen name="textSize_svprogresshuddefault_msg">15sp</dimen>
+    <!-- From: file:/Users/Sai/Documents/workpace/android/github/Android-SVProgressHUD/svprogresshud/src/main/res/values/integers.xml -->
+    <eat-comment/>
+    <integer name="svanimation_default_duration">300</integer>
+    <!-- From: file:/Users/Sai/Documents/workpace/android/github/Android-SVProgressHUD/svprogresshud/src/main/res/values/styles.xml -->
+    <eat-comment/>
+
+    <!-- mainactivity tab的背景颜色-->
+    <color name="color_transparent">#00000000</color>
+    <color name="white40">#40FFFFFF</color>
+    <color name="f0f0f0">#f0f0f0</color>
+    <!-- SearchURLActivity -->
+    <color name="background_white">#fafbfd</color>
+    <!-- GlobleTitleLayout-->
+    <color name="title_black">#212121</color>
+    <color name="black333333">#ff333333</color>
+    <color name="black969696">#969696</color>
+    <color name="yellow_bd8913">#FFBE28</color>
+    <color name="black_touming_60">#99000000</color>
+    <color name="black_touming_80">#cc000000</color>
+    <color name="transparent15">#26000000</color>
+    <color name="transparent30">#4d000000</color>
+    <!-- selectactivity -->
+    <color name="black">#000000</color>
+    <color name="red">#ffff3366</color>
+    <color name="white">#ffffff</color>
+    <!--<color name="color_ff3366">#ff3366</color>-->
+    <color name="color_af8323">#af8323</color>
+    <color name="color_a67203">#99a67203</color>
+    <color name="backround_black">#ff010101</color>
+    <color name="nothing">#00ffffff</color>
+    <color name="black_blur">#99000000</color>
+    <!-- camerafragment -->
+    <color name="blue">#2196F3</color>
+    <color name="color_f7f7f7">#f7f7f7</color>
+    <color name="color_8e8e8e">#8e8e8e</color>
+    <color name="color_222">#222</color>
+    <color name="color_333">#333</color>
+    <color name="color_444">#444</color>
+    <color name="color_666">#666</color>
+    <color name="color_999">#999</color>
+    <color name="color_ccc">#ccc</color>
+    <color name="color_ddd">#ddd</color>
+    <color name="color_eee">#eee</color>
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="radio_button_unselected_color">@android:color/transparent</color>
+    <color name="default_background_label">#ff303030</color>
+    <color name="black40">#66000000</color>
+    <color name="black20">#33000000</color>
+    <color name="color_f8f8f8">#f8f8f8</color>
+    <color name="color_4a4a4a">#4a4a4a</color>
+    <color name="color_aaa">#aaa</color>
+    <color name="color_bal">#aaa</color>
+    <color name="color_f5f5f5">#F5F5F5</color>
+    <color name="colorOverlay">#78ffffff</color>
+
+    <color name="colorDeleteBg">#FE3824</color>
+    <color name="colorModifyBg">#222222</color>
+</resources>

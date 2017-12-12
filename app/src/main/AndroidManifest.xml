@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.stephen.tv">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="true" />
+
+    <application
+        android:name="com.stephen.com.taihuoniao.fineix.tv.common.App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name="com.stephen.com.taihuoniao.fineix.tv.MainActivity"
+            android:banner="@drawable/app_icon_your_company"
+            android:icon="@drawable/app_icon_your_company"
+            android:label="@string/app_name"
+            android:theme="@style/NoTitleFullscreen"
+            android:launchMode="standard"
+            android:logo="@drawable/app_icon_your_company">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.stephen.com.taihuoniao.fineix.tv.activity.DetailsActivity" android:theme="@style/NoTitleFullscreen"/>
+        <activity android:name="com.stephen.com.taihuoniao.fineix.tv.activity.ActivityLogin" android:theme="@style/NoTitleFullscreen"/>
+
+        <!--<receiver android:name=".ScreenSaverBroadCastReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.SCREEN_OFF"/>-->
+                <!--<action android:name="android.intent.action.SCREEN_ON"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+    </application>
+
+</manifest>

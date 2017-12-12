@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/bg_list_portrait"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+
+        <TextView
+            android:id="@+id/textView_currentPageWithTotal"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/backround_corner_white"
+            android:gravity="center"
+            android:text="1/6" />
+
+        <TextView
+            android:id="@+id/textView_close_activity"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:textColor="#FFFFFF"
+            android:visibility="gone"
+            android:background="@drawable/backround_corner_white"
+            android:gravity="center"
+            android:text="关闭" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.taihuoniao.fineix.tv.view.autoScrollViewpager.ScrollableView
+            android:id="@+id/scrollableView"
+            android:layout_width="match_parent"
+            android:layout_height="550dp"
+            android:background="@color/black_touming_80" />
+
+        <TextView
+            android:id="@+id/textView_button_left"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/selector_button_left" />
+
+        <TextView
+            android:id="@+id/textView_button_right"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/selector_button_right" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp">
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="24dp"
+                android:textColor="@color/yellow_bd8913"
+                android:textSize="19sp" />
+
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/price"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="5dp"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/market_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/title"
+                android:layout_below="@id/price"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@id/title"
+                android:text="fffffff"
+                android:textColor="#999999"
+                android:textSize="12sp"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/market_price2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/market_price"
+                android:layout_toRightOf="@id/market_price"
+                android:background="@drawable/shape_sui_ji_sub"
+                android:padding="@dimen/dp3"
+                android:text="随机优惠"
+                android:textColor="@color/yellow_bd8913"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/liangdian_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/liangdian"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lineSpacingExtra="5dp"
+                android:maxLines="3"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="15dp"
+                android:paddingTop="3dp"
+                android:textColor="#FDFDFD"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="86dp"
+        android:layout_marginRight="70dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/imageView_product_QRcode"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/bg_product_qrcode" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="扫  码  购  买"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+</LinearLayout>
