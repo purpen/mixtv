@@ -223,21 +223,7 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
             mRecyclerView.requestFocus();
         } else if (v == mRecyclerView && hasFocus) {
             // 获取导航栏的第一个条目
-
-//            int lastSelectedPosition = titleRecyclerViewAdapter.getLastSelectedPosition();
-//            if (lastSelectedPosition >= 0) {
-//                mRecyclerView.getLayoutManager().getChildAt(lastSelectedPosition).requestFocus();
-//            }
-
         } else if (v == mViewPager && hasFocus) {
-            // 获取ViewPager (当前)下recylerview 的第一个item
-
-//            ListFragment item = (ListFragment) wellGoodsAdapter.getItem(mViewPager.getCurrentItem());
-//            RecyclerView recyclerView = item.getRecyclerView();
-//            View child = recyclerView.getLayoutManager().findViewByPosition(0);
-//            if (child != null) {
-//                child.requestFocus();
-//            }
 
         } else if (v == imageViewReverse) {
             ImageView imageView = (ImageView) imageViewReverse.getChildAt(0);
@@ -263,14 +249,11 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
                 imageView.setVisibility(VISIBLE);
                 textView.setText("退出登录");
                 textView.setVisibility(VISIBLE);
-
                 imageViewLogout.setBackgroundResource(R.mipmap.bg_button);
             } else {
                 imageView.setVisibility(GONE);
                 textView.setVisibility(GONE);
-
                 imageViewLogout.setBackgroundResource(R.mipmap.icon_logout);
-
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewLogout.getLayoutParams();
                 layoutParams.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
                 layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
@@ -304,12 +287,8 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
     private boolean interceptRightSlide() {
         if (mViewPager.hasFocus()) {
             RecyclerView currentPageRecyclerView = getCurrentPageRecyclerView();
-            int itemCount = currentPageRecyclerView.getLayoutManager().getItemCount();
             View focusedChild = currentPageRecyclerView.getFocusedChild();
             int childAdapterPosition = currentPageRecyclerView.getChildAdapterPosition(focusedChild);
-//            if ((childAdapterPosition == itemCount - 1) && (currentPostion == mViewPager.getAdapter().getCount() - 1)) {
-//                return true;
-//            }
             if ((childAdapterPosition + 1) % columns == 0) {
                 return true;
             }
@@ -323,9 +302,6 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
             RecyclerView currentPageRecyclerView = getCurrentPageRecyclerView();
             View focusedChild = currentPageRecyclerView.getFocusedChild();
             int childAdapterPosition = currentPageRecyclerView.getChildAdapterPosition(focusedChild);
-//            if ((childAdapterPosition == 0) && (currentPostion == 0)) {
-//                return true;
-//            }
             if (childAdapterPosition % columns == 0) {
                 return true;
             }
@@ -355,6 +331,7 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
                     ToastUtil.showSuccess("退出成功");
                     SPUtil.remove(CommonConstants.LOGIN_INFO);
                     mContext.startActivity(new Intent(mContext, ActivityLogin.class));
+                    ((FragmentActivity)mContext).finish();
                 } else {
                     ToastUtil.showError(response.getMessage());
                 }
@@ -443,7 +420,6 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            LogUtil.e(TAG, "-------------------> 收到广播！ ");
             isWaitUserOpera = false;
             mHandler.postDelayed(autoKeyEventTask, 2000);
         }
