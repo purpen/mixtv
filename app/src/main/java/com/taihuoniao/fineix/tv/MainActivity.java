@@ -18,12 +18,15 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 
 import com.taihuoniao.fineix.tv.activity.ActivityLogin;
 import com.taihuoniao.fineix.tv.base.BaseActivity;
 import com.taihuoniao.fineix.tv.bean.LoginInfoBean;
 import com.taihuoniao.fineix.tv.common.App;
 import com.taihuoniao.fineix.tv.common.CommonConstants;
+import com.taihuoniao.fineix.tv.utils.LogUtil;
 import com.taihuoniao.fineix.tv.utils.ToastUtil;
 
 /*

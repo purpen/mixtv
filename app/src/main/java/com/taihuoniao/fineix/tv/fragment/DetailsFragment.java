@@ -52,14 +52,6 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
 
     @Override
     protected void initList() {
-//        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.scrollableView.getLayoutParams();
-//        layoutParams.width = App.getContext().getScreenWidth();
-//        layoutParams.height = layoutParams.width * 422 / 750;
-//        holder.scrollableView.setLayoutParams(layoutParams);
-
-//        pullRefreshView.setAdapter(goodDetailsSceneListAdapter);
-//        holder.detailContainer.setOnClickListener(this);
-
         if (App.screenOrientation.equals(CommonConstants.SCREENORIENTATION_PORTRAIT)) {
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) holder.scrollableView.getLayoutParams();
             layoutParams.width = App.getContext().getScreenWidth();
@@ -83,10 +75,10 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
 
     @Override
     public void onPause() {
-        super.onPause();
         if (holder.scrollableView != null) {
             holder.scrollableView.stop();
         }
+        super.onPause();
     }
 
     //用来刷新页面
@@ -111,7 +103,6 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
         }
 
         if (dataBean.getStage() != 9) {
-//            holder.detailContainer.setVisibility(View.GONE);
             holder.price.setVisibility(View.GONE);
             holder.liangdianContainer.setVisibility(View.GONE);
         } else {
@@ -147,11 +138,7 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
         } else {
             holder.liangdian.setText(dataBean.getAdvantage());
         }
-//        holder.marketPrice2.setVisibility("1".equals(dataBean.getActive_summary().getOrder_reduce()) ? View.VISIBLE : View.GONE);
-//        holder.marketPrice2.setVisibility("0".equals(dataBean.getExtra().getDisabled_app_reduce()) ? View.VISIBLE : View.GONE);
-
         holder.marketPrice2.setVisibility(View.GONE);
-
         if (dataBean.getStage() != 9) {
             holder.marketPrice.setText("此产品为用户标记，暂未销售。浮游正在努力上架产品中ing...");
             holder.marketPrice.setVisibility(View.VISIBLE);
@@ -179,6 +166,7 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
                 }
             });
         }
+        holder.marketPrice.setVisibility(View.GONE);
     }
 
     @Override
@@ -188,17 +176,12 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
 
     public static class ViewHolder {
         private ScrollableView scrollableView;
-//        private LinearLayout detailContainer;
         private TextView title;
         private TextView price;
         private TextView marketPrice;
         private TextView marketPrice2;
         private LinearLayout liangdianContainer;
         private TextView liangdian;
-//        private RelativeLayout brandContainer;
-//        private ImageView img;
-//        private RoundedImageView brandImg;
-//        private TextView brandName;
         private ImageView qrCodeImage;
         private TextView buttonLeft;
         private TextView buttonRight;
@@ -208,17 +191,12 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
         ViewHolder(View view) {
             super();
             scrollableView = (ScrollableView) view.findViewById(R.id.scrollableView);
-//            detailContainer = (LinearLayout) view.findViewById(R.id.detail_container);
             title = (TextView) view.findViewById(R.id.title);
             price = (TextView) view.findViewById(R.id.price);
             marketPrice = (TextView) view.findViewById(R.id.market_price);
             marketPrice2 = (TextView) view.findViewById(R.id.market_price2);
             liangdianContainer = (LinearLayout) view.findViewById(R.id.liangdian_container);
             liangdian = (TextView) view.findViewById(R.id.liangdian);
-//            brandContainer = (RelativeLayout) view.findViewById(R.id.brand_container);
-//            img = (ImageView) view.findViewById(R.id.img);
-//            brandImg = (RoundedImageView) view.findViewById(R.id.brand_img);
-//            brandName = (TextView) view.findViewById(R.id.brand_name);
             qrCodeImage = (ImageView) view.findViewById(R.id.imageView_product_QRcode);
             buttonLeft = (TextView) view.findViewById(R.id.textView_button_left);
             buttonRight = (TextView) view.findViewById(R.id.textView_button_right);
@@ -235,21 +213,6 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
         }
     }
 
-//    public void OnKeyDown(int keyCode, KeyEvent event){
-//        if( event.KEYCODE_DROP_UP== keyCode ){  //如果按下的是上键
-//            mImgBtnArray1[ThirdIndx ].requestFocus;
-//        }
-//        if( event.KEYCODE_DROP_DOWN == keyCode ){  //如果按下的是下键
-//            mImgBtnArray3[ ThirdIndx ].requestFocus;
-//        }
-//        if( event.KEYCODE_DROP_LEFT == keyCode ){  //如果按下的是左键
-//            mImgBtnArray1[ ThirdIndx-1 ].requestFocus;
-//        }
-//        if( event.KEYCODE_DROP_RIGHT == keyCode ){  //如果按下的是右键
-//            mImgBtnArray1[ ThirdIndx+1 ].requestFocus;
-//        }
-//    }
-
     public ViewHolder getViewHolder(){
         return holder;
     }
@@ -259,5 +222,9 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
         if (holder.textView_currentPageWithTotal != null) {
             holder.textView_currentPageWithTotal.setText((position + 1) + "/" + total);
         }
+    }
+
+    public ScrollableView getScrollableView(){
+        return holder.scrollableView;
     }
 }

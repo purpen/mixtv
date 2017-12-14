@@ -179,12 +179,6 @@ public class ListFragment extends BaseFragment {
         return itemBorderWidth;
     }
 
-    @Override
-    public void onDestroy() {
-
-        super.onDestroy();
-    }
-
     private float caculateItemBorderWidth() {
         if (App.screenOrientation.equals(CommonConstants.SCREENORIENTATION_PORTRAIT)) {
             return caculateItemBorderWidthPortrait();

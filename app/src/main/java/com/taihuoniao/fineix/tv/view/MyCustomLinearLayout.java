@@ -1,8 +1,13 @@
 package com.taihuoniao.fineix.tv.view;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -40,13 +45,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Stephen on 2017/12/1 10:13
  * Email: 895745843@qq.com
  */
 
-public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusChangeListener, View.OnClickListener {
+public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusChangeListener, View.OnClickListener{
     private static String TAG = MyCustomLinearLayout.class.getSimpleName();
     private Context mContext;
 
@@ -65,7 +72,7 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
     private int currentPostion; //当前页面位置
     private int columns = 5;
     private WaittingDialog mDialog;
-
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public MyCustomLinearLayout(Context context) {
         this(context, null);
@@ -119,7 +126,9 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                mRecyclerView.smoothScrollToPosition(position);
+                View childAt = mRecyclerView.getLayoutManager().getChildAt(position);
+                titleRecyclerViewAdapter.setIndicatorSelectedPosition(childAt);
             }
 
             @Override
@@ -143,18 +152,22 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
         mViewPager.setOnFocusChangeListener(this);
         this.setOnFocusChangeListener(this);
         mDialog = new WaittingDialog(context);
+        mContext.registerReceiver(mBroadcastReceiver, new IntentFilter(CommonConstants.BROADCAST_FILTER));
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            LogUtil.e(TAG, "--------------> dispatchKeyEvent()");
+
+            mHandler.removeCallbacks(autoKeyEventTask);
+            mHandler.postDelayed(autoKeyEventTask, CommonConstants.DELAYMILLIS_MAINPAGE);
             switch (event.getKeyCode()) {
                 case KeyEvent.KEYCODE_DPAD_UP:
                     if (mViewPager.hasFocus()) {
 
                         //  判断是不是第一行
-                        ListFragment item = (ListFragment) wellGoodsAdapter.getItem(mViewPager.getCurrentItem());
-                        RecyclerView recyclerView = item.getRecyclerView();
+                        RecyclerView recyclerView = getCurrentPageRecyclerView(mViewPager.getCurrentItem());
                         View focusedChild = recyclerView.getFocusedChild();
                         int childAdapterPosition = recyclerView.getChildAdapterPosition(focusedChild);
                         if (childAdapterPosition < App.pageDisplayColumns) {
@@ -287,11 +300,6 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
         }
     }
 
-    private RecyclerView getCurrentPageRecyclerView(){
-        ListFragment item = (ListFragment) wellGoodsAdapter.getItem(currentPostion);
-        return item.getRecyclerView();
-    }
-
     // 禁止viewPager下recyclerView左滑
     private boolean interceptRightSlide() {
         if (mViewPager.hasFocus()) {
@@ -359,4 +367,96 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
             }
         });
     }
+
+    /**
+     * 定时任务
+     */
+    private Runnable autoKeyEventTask = new Runnable(){
+
+        @Override
+        public void run() {
+            RecyclerView currentPageRecyclerView = getCurrentPageRecyclerView();
+            View currentPageRecyclerViewFocusedChild = currentPageRecyclerView.getFocusedChild();
+            RecyclerView.LayoutManager layoutManager = currentPageRecyclerView.getLayoutManager();
+            if (currentPageRecyclerViewFocusedChild == null) {
+                currentPageRecyclerView.requestFocus();
+                currentPageRecyclerViewFocusedChild = layoutManager.getChildAt(0);
+                executeTask(currentPageRecyclerView, 0, currentPageRecyclerViewFocusedChild);
+            } else {
+                int childAdapterPosition = currentPageRecyclerView.getChildAdapterPosition(currentPageRecyclerViewFocusedChild);
+                int itemCount = currentPageRecyclerView.getAdapter().getItemCount();
+
+                // recyclerView 最后item位置
+                if (childAdapterPosition == itemCount - 1) {
+                    if (currentPostion == mViewPager.getAdapter().getCount() - 1) {
+                        currentPostion = 0; //重置为0
+                        mViewPager.setCurrentItem(currentPostion);
+                        resetRecyclerItemPositionByViewPager(currentPostion);
+                    } else if (currentPostion < mViewPager.getAdapter().getCount() - 1) {
+                        currentPostion += 1; // 滑倒下一页
+                        mViewPager.setCurrentItem(currentPostion);
+                        resetRecyclerItemPositionByViewPager(currentPostion);
+                    }
+                } else if (childAdapterPosition < itemCount) {
+                    int position = ++childAdapterPosition;
+                    final View viewByPosition = layoutManager.getChildAt(position) == null ? layoutManager.findViewByPosition(position) : layoutManager.getChildAt(position);
+                    executeTask(currentPageRecyclerView, position, viewByPosition);
+                }
+            }
+        }
+    };
+
+    private void resetRecyclerItemPositionByViewPager(final int currentPostion) {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                RecyclerView recyclerView2 = getCurrentPageRecyclerView(currentPostion);
+                View focusedChild2 = recyclerView2.getLayoutManager().getChildAt(0);
+                executeTask(recyclerView2, currentPostion, focusedChild2);
+            }
+        }, 2000);
+    }
+
+    private RecyclerView getCurrentPageRecyclerView(){
+        ListFragment item = (ListFragment) wellGoodsAdapter.getItem(currentPostion);
+        return item.getRecyclerView();
+    }
+
+    private RecyclerView getCurrentPageRecyclerView(int currentItem) {
+        ListFragment item = (ListFragment) wellGoodsAdapter.getItem(currentItem);
+        return item.getRecyclerView();
+    }
+
+    private void executeTask(RecyclerView recyclerView, int recyclerViewItemtPosition, final View recyclerViewItem) {
+        if (recyclerViewItem != null) {
+            recyclerView.scrollToPosition(recyclerViewItemtPosition);
+            recyclerViewItem.requestFocus();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerViewItem.performClick();
+                }
+            }, 1000);
+        }
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtil.e(TAG, "-------------------> 收到广播！ ");
+            isWaitUserOpera = false;
+            mHandler.postDelayed(autoKeyEventTask, 2000);
+        }
+    };
+
+    /**
+     * 无人操作倒计时
+     */
+    public void resumeRecyclerViewFocusedView(){
+        if (isWaitUserOpera) {
+            mHandler.postDelayed(autoKeyEventTask, CommonConstants.DELAYMILLIS_MAINPAGE);
+        }
+    }
+
+    private boolean isWaitUserOpera = true;
 }

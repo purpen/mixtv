@@ -69,37 +69,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener 
             ToastUtil.showInfo("请输入密码");
             return;
         }
-
-        HashMap<String, Object> params = getclickLoginNetRequestParams(phone, password);
-        OkHttpUtil.sendRequest(URL.AUTH_LOGIN, params, new HttpRequestCallback(){
-            @Override
-            public void onStart() {
-                btLogin.setEnabled(false);
-                if (mDialog != null) mDialog.show();
-                super.onStart();
-            }
-
-            @Override
-            public void onSuccess(String json) {
-                btLogin.setEnabled(true);
-                mDialog.dismiss();
-                HttpResponseBean<LoginInfoBean> response = JsonUtil.json2Bean(json, new TypeToken<HttpResponseBean<LoginInfoBean>>() {
-                });
-                if (response.isSuccess()) {//登录界面登录成功
-                    final LoginInfoBean loginInfo = response.getData();
-                    SPUtil.write(CommonConstants.LOGIN_INFO, JsonUtil.toJson(loginInfo));
-                    startActivity(new Intent(ActivityLogin.this, MainActivity.class));
-                    return;
-                }
-                ToastUtil.showError(response.getMessage());
-            }
-
-            @Override
-            public void onFailure(IOException e) {
-                mDialog.dismiss();
-                ToastUtil.showError(R.string.network_err);
-            }
-        });
+        requeLoginApi(phone, password);
     }
 
     /**
@@ -114,5 +84,47 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener 
         params.put("from_to", "2");     //登录渠道
         params.put("password", password);
         return params;
+    }
+
+    /**
+     * 请求登陆接口
+     */
+    private void requeLoginApi(String phone, String password) {
+        HashMap<String, Object> params = getclickLoginNetRequestParams(phone, password);
+        OkHttpUtil.sendRequest(URL.AUTH_LOGIN, params, new HttpRequestCallback(){
+            @Override
+            public void onStart() {
+                btLogin.setEnabled(false);
+                if (mDialog != null && !mDialog.isShowing()) {
+                    mDialog.show();
+                }
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(String json) {
+                btLogin.setEnabled(true);
+                mDialog.dismiss();
+                HttpResponseBean<LoginInfoBean> response = JsonUtil.json2Bean(json, new TypeToken<HttpResponseBean<LoginInfoBean>>() {
+                });
+                if (response.isSuccess()) {//登录界面登录成功
+                    final LoginInfoBean loginInfo = response.getData();
+                    SPUtil.write(CommonConstants.LOGIN_INFO, JsonUtil.toJson(loginInfo));
+                    startActivity(new Intent(ActivityLogin.this, MainActivity.class));
+                    ActivityLogin.this.finish();
+                    return;
+                }
+//                ToastUtil.showError(response.getMessage());
+
+                // 再次请求接口，用默认帐号
+                requeLoginApi(CommonConstants.TEST_ACCOUNT, CommonConstants.TEST_SECRETKEY);
+            }
+
+            @Override
+            public void onFailure(IOException e) {
+                mDialog.dismiss();
+                ToastUtil.showError(R.string.network_err);
+            }
+        });
     }
 }

@@ -32,6 +32,7 @@ import com.taihuoniao.fineix.tv.utils.JsonUtil;
 import com.taihuoniao.fineix.tv.utils.OkHttpUtil;
 import com.taihuoniao.fineix.tv.utils.SPUtil;
 import com.taihuoniao.fineix.tv.utils.ToastUtil;
+import com.taihuoniao.fineix.tv.view.MyCustomLinearLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
 
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
+    private MyCustomLinearLayout mCustomLinearLayout;
 
     @Override
     protected void requestNet() {
@@ -66,23 +68,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected View initView() {
         final View view = View.inflate(getActivity(), R.layout.fragment_main, null);
-
         if (view != null) {
+            mCustomLinearLayout = (MyCustomLinearLayout) view.findViewById(R.id.myCustomLinearLayout);
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    view.findViewById(R.id.myCustomLinearLayout).requestFocus();
+                    mCustomLinearLayout.requestFocus();
                 }
             }, 300);
             return view;
         }
-//        mEpisodeListView = (EpisodeListView)view. findViewById(R.id.episodelistview);
         findViews(view);
         setOnFocusListener();
         setClickListener();
         mDialog = new WaittingDialog(getActivity());
-//        initEpisodeListView();
-
         RecyclerView titleRecyclerView = (RecyclerView) view.findViewById(R.id.ry_menu_item);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         titleRecyclerView.setLayoutManager(linearLayoutManager);
@@ -107,12 +106,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                     TextView textView = (TextView) imageViewReverse.getChildAt(0);
                     textView.setCompoundDrawablesWithIntrinsicBounds(background, null, null, null);
                     textView.setText("切换竖屏");
-
                     imageViewReverse.setBackgroundResource(R.mipmap.bg_button);
-
-//                    ViewGroup.LayoutParams layoutParams = imageViewReverse.getLayoutParams();
-//                    layoutParams.width = DpUtil.dp2px(getActivity(), 150);
-//                    layoutParams.height = DpUtil.dp2px(getActivity(), 57);
 
                 } else {
                     TextView textView = (TextView) imageViewReverse.getChildAt(0);
@@ -141,9 +135,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                     TextView textView = (TextView) imageViewLogout.getChildAt(0);
                     textView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                     textView.setText("");
-
                     imageViewLogout.setBackgroundResource(R.mipmap.icon_logout);
-
                     RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewLogout.getLayoutParams();
                     layoutParams.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
                     layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
@@ -205,17 +197,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
             fragment.setArguments(bundle);
             mBaseFragments.add(fragment);
         }
-    }
-
-    @Override
-    protected void initList() {
-//        initTitleBar();
-//        initTabLayout();
-//        initTabLayoutAndViewPager();
-    }
-
-    private void initTitleBar(){
-
     }
 
     @Override
@@ -290,8 +271,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
             mDialog.cancel();
             mDialog = null;
         }
-
-
         super.onStop();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mCustomLinearLayout.resumeRecyclerViewFocusedView();
     }
 }

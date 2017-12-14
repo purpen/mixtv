@@ -18,7 +18,8 @@ import java.util.List;
 import butterknife.ButterKnife;
 
 /**
- * Created by taihuoniao on 2016/3/14.
+ * Created by taihuoniao on 2016/3/14 14:37
+ * Email: 895745843@qq.com
  */
 public abstract class BaseFragment<T> extends Fragment {
     protected final String TAG = getClass().getSimpleName();
@@ -72,29 +73,6 @@ public abstract class BaseFragment<T> extends Fragment {
 
     protected void installListener() {
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-//        MobclickAgent.onPageStart(TAG);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-//        MobclickAgent.onPageEnd(TAG);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
 
     @Override
     public void onDestroy() {

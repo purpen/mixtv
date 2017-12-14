@@ -3,6 +3,8 @@ package com.taihuoniao.fineix.tv.common;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -15,13 +17,11 @@ import com.taihuoniao.fineix.tv.R;
  * Created by taihuoniao on 2016/1/21.
  */
 public class WaittingDialog extends Dialog {
-    private int resBigLoading = R.mipmap.ic_sv_loading;
-    private int resInfo = R.mipmap.ic_svstatus_info;
-    private int resSuccess = R.mipmap.ic_svstatus_success;
-    private int resError = R.mipmap.ic_svstatus_error;
-    private ImageView ivBigLoading;/*, ivSmallLoading;
-    private SVCircleProgressBar circleProgressBar;
-    private TextView tvMsg;*/
+    private int resBigLoading       = R.mipmap.ic_sv_loading;
+    private int resInfo             = R.mipmap.ic_svstatus_info;
+    private int resSuccess          = R.mipmap.ic_svstatus_success;
+    private int resError            = R.mipmap.ic_svstatus_error;
+    private ImageView ivBigLoading;
 
     private RotateAnimation mRotateAnimation;
     public WaittingDialog(Context context) {
@@ -31,7 +31,11 @@ public class WaittingDialog extends Dialog {
     private WaittingDialog(Context context, int theme) {
         super(context, R.style.custom_progress_dialog);
         this.setContentView(R.layout.view_svprogressdefault);
-        this.getWindow().getAttributes().gravity = Gravity.CENTER;
+        Window window = this.getWindow();
+        if (window == null) {
+            return;
+        }
+        window.getAttributes().gravity = Gravity.CENTER;
 //        this.setCancelable(true);
         this.setCanceledOnTouchOutside(false);
         initViews();

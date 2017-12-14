@@ -1,4 +1,4 @@
-package com.stephen.tv;
+package com.taihuoniao.fineix.tv;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

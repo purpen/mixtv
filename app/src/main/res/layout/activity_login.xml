@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/bg_login_landscape"
-    tools:context="com.stephen.tv.com.taihuoniao.fineix.tv.activity.ActivityLogin">
+    tools:context="com.taihuoniao.fineix.tv.activity.ActivityLogin">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -70,11 +70,11 @@
                 android:id="@+id/bt_login"
                 style="@style/RegisterAndLogin"
                 android:layout_width="match_parent"
-                android:layout_marginRight="0dp"
-                android:layout_alignParentRight="true"
                 android:background="@drawable/shape_login_register"
                 android:text="登录"
                 android:textColor="#af8323" />
+                <!--android:layout_marginRight="0dp"-->
+                <!--android:layout_alignParentRight="true"-->
         </RelativeLayout>
 
     </LinearLayout>

@@ -60,7 +60,6 @@ public class App extends Application {
             pageDisplayColumns = CommonConstants.SCREENORIENTATION_LANDSCAPE_COLUMNS;
             screenOrientation = CommonConstants.SCREENORIENTATION_LANDSCAPE;
         }
-
         LogUtil.e("---------------> ScreenOrientation: " + screenOrientation);
     }
 }

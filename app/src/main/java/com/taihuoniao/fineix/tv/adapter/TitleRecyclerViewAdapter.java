@@ -67,14 +67,12 @@ public class TitleRecyclerViewAdapter extends RecyclerView.Adapter<TitleRecycler
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         int resId = R.layout.detail_menu_item;
         View view = LayoutInflater.from(mContext).inflate(resId, viewGroup, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
         if (mDataList == null || mDataList.length == 0) {
-            Log.d(TAG, "mDataset has no data!");
             return;
         }
         viewHolder.mTextView.setText(mDataList[i]);
@@ -82,11 +80,9 @@ public class TitleRecyclerViewAdapter extends RecyclerView.Adapter<TitleRecycler
         viewHolder.itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-
                 if ( v == focusedView) {
                     return;
                 }
-//                setFocusedViewStatus(v, hasFocus);
                 if (hasFocus) {
                     if (onBindListener != null) {
                         onBindListener.onBind(null, viewHolder.getAdapterPosition());

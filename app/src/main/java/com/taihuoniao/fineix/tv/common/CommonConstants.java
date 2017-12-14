@@ -16,4 +16,14 @@ public class CommonConstants {
     public static final int SCREENORIENTATION_LANDSCAPE_COLUMNS = 5;
     public static final int SCREENORIENTATION_PORTRAIT_COLUMNS = 3;
 
+    public static final String BROADCAST_FILTER = "AutoKeyEvent";
+    public static final long DELAYMILLIS_MAINPAGE = 1000 * 10;
+    public static final long DELAYMILLIS_DETAILSPAGE = 1000 * 10;
+
+    /**
+     * 测试帐号
+     */
+    public static final String TEST_ACCOUNT = "15001120509";
+    public static final String TEST_SECRETKEY = "123456";
+
 }
