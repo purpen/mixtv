@@ -9,7 +9,7 @@ import android.util.Log;
  *         created at 2016/3/24 14:58
  */
 public class LogUtil {
-    private static final String TAG = "banmen";
+    private static final String TAG = "D3IN_TV";
     private static final boolean DEV_MODE = true;
     private static final int LOG_MAXLENGTH  = 2000;
 
