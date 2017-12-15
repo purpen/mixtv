@@ -16,6 +16,7 @@ import com.taihuoniao.fineix.tv.adapter.ListRecyclerViewAdapter;
 import com.taihuoniao.fineix.tv.base.BaseFragment;
 import com.taihuoniao.fineix.tv.bean.HttpResponseBean;
 import com.taihuoniao.fineix.tv.bean.ProductBean;
+import com.taihuoniao.fineix.tv.common.ApiHelper;
 import com.taihuoniao.fineix.tv.common.App;
 import com.taihuoniao.fineix.tv.common.CommonConstants;
 import com.taihuoniao.fineix.tv.common.GlobalCallBack;
@@ -76,6 +77,7 @@ public class ListFragment extends BaseFragment {
                 if (o != null && o instanceof ProductBean.RowsEntity) {
                     ProductBean.RowsEntity rowsEntity = (ProductBean.RowsEntity) o;
                     Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                    intent.putExtra("categoryId", categoryId);
                     intent.putExtra("id", rowsEntity.get_id());
                     startActivity(intent);
                 }
@@ -96,7 +98,7 @@ public class ListFragment extends BaseFragment {
      * 产品列表
      */
     private void getLProductList(){
-        HashMap<String, Object> stringObjectHashMap = getgetProductListRequestParams(null, null, categoryId, null, null, String.valueOf(currentPage), String.valueOf(8), null, null, null, "0", null);
+        HashMap<String, Object> stringObjectHashMap = ApiHelper.getgetProductListRequestParams(null, null, categoryId, null, null, String.valueOf(currentPage), String.valueOf(8), null, null, null, "0", null);
         stringObjectHashMap.put("size", "15");
         OkHttpUtil.sendRequest(URL.URLSTRING_PRODUCTSLIST, stringObjectHashMap, new HttpRequestCallback(){
             @Override
@@ -111,7 +113,6 @@ public class ListFragment extends BaseFragment {
                     mDialog.dismiss();
                 }
                 HttpResponseBean<ProductBean> productBean = JsonUtil.json2Bean(json, new TypeToken<HttpResponseBean<ProductBean>>() {});
-                LogUtil.e( "----------" + productBean.isSuccess());
                 if (productBean.isSuccess()) {
                     mListAdapter.putList(productBean.getData().getRows());
                 }
@@ -125,24 +126,6 @@ public class ListFragment extends BaseFragment {
                 ToastUtil.showError(R.string.network_err);
             }
         });
-    }
-
-    public HashMap<String, Object> getgetProductListRequestParams(String title, String sort, String category_id, String brand_id, String category_tag_ids, String page, String size, String ids, String ignore_ids, String stick, String fine, String stage) {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("title", title);
-        params.put("sort", sort);
-        params.put("category_id", category_id);
-        params.put("brand_id", brand_id);
-        params.put("brand_id", brand_id);
-        params.put("category_tags", category_tag_ids);
-        params.put("page", page);
-        params.put("size", size);
-        params.put("ids", ids);
-        params.put("ignore_ids", ignore_ids);
-        params.put("stick", stick);
-        params.put("fine", fine);
-        params.put("stage", stage);
-        return params;
     }
 
     public RecyclerView getRecyclerView(){

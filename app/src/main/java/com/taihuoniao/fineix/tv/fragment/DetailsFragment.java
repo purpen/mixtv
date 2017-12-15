@@ -1,11 +1,20 @@
 package com.taihuoniao.fineix.tv.fragment;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,9 +26,12 @@ import com.taihuoniao.fineix.tv.base.BaseFragment;
 import com.taihuoniao.fineix.tv.bean.BuyGoodDetailsBean;
 import com.taihuoniao.fineix.tv.common.App;
 import com.taihuoniao.fineix.tv.common.CommonConstants;
+import com.taihuoniao.fineix.tv.utils.DpUtil;
+import com.taihuoniao.fineix.tv.utils.LogUtil;
 import com.taihuoniao.fineix.tv.utils.QrCodeUtil;
 import com.taihuoniao.fineix.tv.view.autoScrollViewpager.ScrollableView;
 import com.taihuoniao.fineix.tv.view.autoScrollViewpager.ViewPagerAdapter;
+import com.yanzhenjie.alertdialog.AlertDialog;
 
 import java.util.List;
 
@@ -31,6 +43,8 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
     private ViewHolder holder;//headerview控件
     private ViewPagerAdapter<String> viewPagerAdapter;
     private BuyGoodDetailsBean mbuyGoodDetailsBean;
+    private Bitmap qrCodeBitmap;
+    private int imageCount;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,9 +107,9 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
         try {
             if (isAdded()) {
                 Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.mipmap.logo_company);
-                Bitmap bitmap = QrCodeUtil.create2DCode(bitmap1, share_view_url, holder.qrCodeImage.getWidth() - 5, holder.qrCodeImage.getHeight() - 5);
-                if (bitmap != null) {
-                    holder.qrCodeImage.setImageBitmap(bitmap);
+                qrCodeBitmap = QrCodeUtil.create2DCode(bitmap1, share_view_url, holder.qrCodeImage.getWidth() - 5, holder.qrCodeImage.getHeight() - 5);
+                if (qrCodeBitmap != null) {
+                    holder.qrCodeImage.setImageBitmap(qrCodeBitmap);
                 }
             }
         } catch (WriterException e) {
@@ -110,19 +124,25 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
         }
         if (viewPagerAdapter == null) {
             List<String> asset = mbuyGoodDetailsBean.getAsset();
+            imageCount = asset.size();
             viewPagerAdapter = new ViewPagerAdapter<>(activity, asset);
             holder.scrollableView.setAdapter(viewPagerAdapter.setInfiniteLoop(true));
             holder.scrollableView.setOnPageChangeListener(this);
             holder.scrollableView.setAutoScrollDurationFactor(8);
             holder.scrollableView.setInterval(4000);
-            holder.scrollableView.showIndicators();
+//            holder.scrollableView.showIndicators();
+            holder.scrollableView.showIndicatorRight();
             holder.scrollableView.start();
-
-            if (holder.textView_currentPageWithTotal != null) {
-                holder.textView_currentPageWithTotal.setText((1) + "/" + asset.size());
-            }
         } else {
+            List<String> newAsset = mbuyGoodDetailsBean.getAsset();
+            imageCount = newAsset.size();
+            viewPagerAdapter.setList(newAsset);
             viewPagerAdapter.notifyDataSetChanged();
+            holder.scrollableView.start();
+        }
+        if (holder.textView_currentPageWithTotal != null) {
+            LogUtil.e(TAG, "------- 总共" + imageCount + "张图，当前展示第" + (1) + "张");
+            holder.textView_currentPageWithTotal.setText((1) + "/" + imageCount);
         }
         holder.title.setText(dataBean.getTitle());
         holder.price.setText("¥" + dataBean.getSale_price());
@@ -219,12 +239,62 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
 
     @Override
     public void onPageSelected(int total, int position) {
+        LogUtil.e(TAG, "------- 总共" + imageCount + "张图，当前展示第" + (position + 1) + "张");
         if (holder.textView_currentPageWithTotal != null) {
             holder.textView_currentPageWithTotal.setText((position + 1) + "/" + total);
+        }
+
+        if (position + 1 == total) {
+            getContext().sendBroadcast(new Intent(CommonConstants.BROADCAST_FILTER_AUTO_LOAD_DATA));
         }
     }
 
     public ScrollableView getScrollableView(){
         return holder.scrollableView;
+    }
+
+    /**
+     * 展示产品二维码大图
+     */
+    public void showProductQrCode(){
+
+        ImageView imageView = new ImageView(getActivity());
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        imageView.setImageBitmap(qrCodeBitmap);
+        int width = DpUtil.dp2px(getActivity(), 100);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width * 2, width * 2);
+        imageView.setLayoutParams(params);
+
+        TextView textView = new TextView(getActivity());
+        textView.setText("请扫码购买");
+        textView.setTextColor(getResources().getColor(android.R.color.white));
+        textView.setTextSize(18);
+        textView.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int margins = DpUtil.dp2px(getActivity(), 5);
+        textViewParams.setMargins(0, margins, 0, margins);
+        textView.setLayoutParams(textViewParams);
+
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setGravity(Gravity.CENTER);
+        linearLayout.addView(imageView);
+        linearLayout.addView(textView);
+
+        Dialog mDialog = new Dialog(getActivity(), R.style.ProductQRCodeDialog);
+        mDialog.setContentView(linearLayout);
+        mDialog.setCanceledOnTouchOutside(true);
+        mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (holder.scrollableView != null) {
+                    holder.scrollableView.start();
+                }
+            }
+        });
+        if (holder.scrollableView != null) {
+            holder.scrollableView.stop();
+        }
+        mDialog.show();
     }
 }

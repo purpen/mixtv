@@ -97,4 +97,7 @@
 
     <color name="colorDeleteBg">#FE3824</color>
     <color name="colorModifyBg">#222222</color>
+
+
+    <color name="colorDialogBg">#4c000000</color>
 </resources>

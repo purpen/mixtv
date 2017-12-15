@@ -10,6 +10,7 @@ import com.taihuoniao.fineix.tv.R;
 import com.taihuoniao.fineix.tv.activity.DetailsActivity;
 import com.taihuoniao.fineix.tv.common.WaittingDialog;
 import com.taihuoniao.fineix.tv.utils.GlideUtil;
+import com.taihuoniao.fineix.tv.utils.LogUtil;
 import com.taihuoniao.fineix.tv.utils.ToastUtil;
 
 import java.util.List;
@@ -63,7 +64,12 @@ public class ViewPagerAdapter<T> extends RecyclingPagerAdapter {
         } else {
             holder = (ViewHolder) view.getTag(R.id.glide_image_tag);
         }
-        final T content = list.get(getPosition(position));
+        int position1 = getPosition(position);
+        if (position1 == list.size()) {
+            LogUtil.e(TAG, "数组下表越界： position1 : " + position1 + " | size：" + size);
+            position1 = 0;
+        }
+        final T content = list.get(position1);
 
 //        if (content instanceof BannerBean.RowsBean) {
 //            GlideUtil.displayImage(((BannerBean.RowsBean) content).cover_url, holder.imageView);
@@ -143,5 +149,15 @@ public class ViewPagerAdapter<T> extends RecyclingPagerAdapter {
     public ViewPagerAdapter setInfiniteLoop(boolean isInfiniteLoop) {
         this.isInfiniteLoop = isInfiniteLoop;
         return this;
+    }
+
+
+    /**
+     * 替换数据
+     * @param list
+     */
+    public void setList(List<T> list) {
+        this.list = list;
+        this.size = (list == null ? 0 : list.size());
     }
 }

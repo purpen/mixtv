@@ -57,7 +57,7 @@ public class MD5Util {
             nameValuePair.put(next.getKey(), next.getValue());
             nameValuePairs.add(nameValuePair);
         }
-        LogUtil.e( "------------------------完整版参数："  +nameValuePairs.toString());
+//        LogUtil.e( "------------------------完整版参数："  +nameValuePairs.toString());
         return nameValuePairs;
     }
 

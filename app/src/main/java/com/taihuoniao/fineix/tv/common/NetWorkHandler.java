@@ -35,7 +35,7 @@ public class NetWorkHandler extends Handler {
             case CALLBACK_SUCCESS:
                 if (msg.obj instanceof String){
                     callback.onSuccess((String) msg.obj);
-                    LogUtil.e(msg.obj.toString());
+//                    LogUtil.e(msg.obj.toString());
                 }else if (msg.obj instanceof Bitmap){
                     callback.onSuccess((Bitmap) msg.obj);
                 }

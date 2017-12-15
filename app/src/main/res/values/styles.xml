@@ -63,4 +63,9 @@
         <item name="android:activityCloseExitAnimation">@anim/close_exit</item>
     </style>
 
+
+    <style name="ProductQRCodeDialog" parent="@style/CustomDialog">
+        <item name="android:windowBackground">@color/colorDialogBg</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>

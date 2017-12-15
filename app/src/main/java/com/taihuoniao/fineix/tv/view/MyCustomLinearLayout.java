@@ -152,7 +152,7 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
         mViewPager.setOnFocusChangeListener(this);
         this.setOnFocusChangeListener(this);
         mDialog = new WaittingDialog(context);
-        mContext.registerReceiver(mBroadcastReceiver, new IntentFilter(CommonConstants.BROADCAST_FILTER));
+//        mContext.registerReceiver(mBroadcastReceiver, new IntentFilter(CommonConstants.BROADCAST_FILTER));
     }
 
     @Override
@@ -353,6 +353,10 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
         @Override
         public void run() {
             RecyclerView currentPageRecyclerView = getCurrentPageRecyclerView();
+            if (currentPageRecyclerView == null) {
+                LogUtil.e(TAG, "Error: currentPageRecyclerView is null !");
+                return;
+            }
             View currentPageRecyclerViewFocusedChild = currentPageRecyclerView.getFocusedChild();
             RecyclerView.LayoutManager layoutManager = currentPageRecyclerView.getLayoutManager();
             if (currentPageRecyclerViewFocusedChild == null) {
@@ -417,13 +421,13 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
         }
     }
 
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            isWaitUserOpera = false;
-            mHandler.postDelayed(autoKeyEventTask, 2000);
-        }
-    };
+//    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            isWaitUserOpera = false;
+//            mHandler.postDelayed(autoKeyEventTask, 2000);
+//        }
+//    };
 
     /**
      * 无人操作倒计时

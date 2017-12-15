@@ -134,7 +134,7 @@ public class OkHttpUtil {
                     Message message = Message.obtain();
                     message.what=NetWorkHandler.CALLBACK_SUCCESS;
                     message.obj=response.body().string();
-                    LogUtil.e("请求结果为" + message.obj.toString());
+//                    LogUtil.e("请求结果为" + message.obj.toString());
                     handler.sendMessage(message);
                 } else {
                     LogUtil.e("response.isSuccessful()==false");
@@ -257,7 +257,7 @@ public class OkHttpUtil {
                 signedNameValuePairs.remove(stringObjectHashMap);
             }
         }
-        LogUtil.e( "------------------------删减版参数："  +signedNameValuePairs.toString());
+//        LogUtil.e( "------------------------删减版参数："  +signedNameValuePairs.toString());
         return signedNameValuePairs;
     }
 

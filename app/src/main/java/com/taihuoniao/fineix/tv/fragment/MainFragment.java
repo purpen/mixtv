@@ -53,8 +53,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
 
     private List<String> mStringList;
     private List<BaseFragment> mBaseFragments;
-    private String[] TITLES = {"先锋智能", "数码电子", "户外出行", "运动健康", "文创玩品", "先锋设计", "家居日用", "厨房卫浴", "母婴成长", "品质饮食"};
-    private String[] CAGEGORYS = {"32", "31", "34", "76", "33", "30", "81", "82", "78", "79"};
 
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
@@ -86,11 +84,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         titleRecyclerView.setLayoutManager(linearLayoutManager);
 
-        TitleRecyclerViewAdapter titleRecyclerViewAdapter = new TitleRecyclerViewAdapter(getActivity(), TITLES);
+        TitleRecyclerViewAdapter titleRecyclerViewAdapter = new TitleRecyclerViewAdapter(getActivity(), CommonConstants.TITLES);
         titleRecyclerViewAdapter.setOnBindListener(new TitleRecyclerViewAdapter.OnBindListener() {
             @Override
             public void onBind(View view, int i) {
-                Toast.makeText(getActivity(), TITLES[i], Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), CommonConstants.TITLES[i], Toast.LENGTH_SHORT).show();
             }
         });
         titleRecyclerView.setAdapter(titleRecyclerViewAdapter);
@@ -189,11 +187,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         mStringList = new ArrayList<>();
         mBaseFragments = new ArrayList<>();
 
-        for(int i = 0; i < TITLES.length; i++) {
-            mStringList.add(TITLES[i]);
+        for(int i = 0; i < CommonConstants.TITLES.length; i++) {
+            mStringList.add(CommonConstants.TITLES[i]);
             ListFragment fragment = new ListFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("categoryId", CAGEGORYS[i]);
+            bundle.putString("categoryId", CommonConstants.CAGEGORYS[i]);
             fragment.setArguments(bundle);
             mBaseFragments.add(fragment);
         }
