@@ -10,10 +10,13 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.animation.Interpolator;
 
+import com.taihuoniao.fineix.tv.utils.LogUtil;
+
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
 public class CustomAutoScrollViewPager extends CustomViewPager {
+    private static final String TAG = CustomAutoScrollViewPager.class.getSimpleName();
     public static final int DEFAULT_INTERVAL = 3000;
     public static final int LEFT = 0;
     public static final int RIGHT = 1;
@@ -90,6 +93,7 @@ public class CustomAutoScrollViewPager extends CustomViewPager {
      * start auto scroll, first scroll delay time is {@link #getInterval()}
      */
     public void startAutoScroll() {
+        LogUtil.e(TAG, "-----------> startAutoScroll() ");
         isAutoScroll = true;
         sendScrollMessage((long) (interval + scroller.getDuration() / autoScrollFactor * swipeScrollFactor));
     }
@@ -108,6 +112,7 @@ public class CustomAutoScrollViewPager extends CustomViewPager {
      * stop auto scroll
      */
     public void stopAutoScroll() {
+        LogUtil.e(TAG, "-----------> stopAutoScroll() ");
         isAutoScroll = false;
         handler.removeMessages(SCROLL_WHAT);
     }
@@ -190,7 +195,7 @@ public class CustomAutoScrollViewPager extends CustomViewPager {
                 isStopByTouch = true;
                 stopAutoScroll();
             } else if (ev.getAction() == MotionEvent.ACTION_UP && isStopByTouch) {
-                startAutoScroll();
+//                startAutoScroll();
             }
         }
 
@@ -244,11 +249,10 @@ public class CustomAutoScrollViewPager extends CustomViewPager {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-
             switch (msg.what) {
                 case SCROLL_WHAT:
                     CustomAutoScrollViewPager pager = this.autoScrollViewPager.get();
-                    if (pager != null) {
+                    if (pager != null && pager.isAutoScroll()) {
                         pager.scroller.setScrollDurationFactor(pager.autoScrollFactor);
                         pager.scrollOnce();
                         pager.scroller.setScrollDurationFactor(pager.swipeScrollFactor);
@@ -368,5 +372,9 @@ public class CustomAutoScrollViewPager extends CustomViewPager {
      */
     public void setBorderAnimation(boolean isBorderAnimation) {
         this.isBorderAnimation = isBorderAnimation;
+    }
+
+    public boolean isAutoScroll(){
+        return isAutoScroll;
     }
 }

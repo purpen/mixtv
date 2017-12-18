@@ -8,10 +8,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.os.SystemClock;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.taihuoniao.fineix.tv.R;
@@ -29,6 +28,7 @@ import com.taihuoniao.fineix.tv.utils.JsonUtil;
 import com.taihuoniao.fineix.tv.utils.LogUtil;
 import com.taihuoniao.fineix.tv.utils.OkHttpUtil;
 import com.taihuoniao.fineix.tv.utils.ToastUtil;
+import com.taihuoniao.fineix.tv.view.autoScrollViewpager.ScrollableView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,6 +49,31 @@ public class DetailsActivity extends BaseActivity {
     private String id;
     private String categoryId;
     private List<String> ids;
+    private boolean isNeedLoadNextData;
+    private boolean isAutoScroll;
+
+    private static final int FIND_INDEX_BY_ID = 0x10010;
+    private static final int FIRST_ITME = 0x10011;
+    private static final int LAST_ITME = 0x10012;
+    private static final int LOAD_ID_LOADING = 0x20001;
+    private static final int LOAD_ID_FINISHED = 0x20000;
+    private static final int LOAD_CATEGORY_LOADING = 0x20002;
+    private static final int LOAD_CATEGORY_FINISH = 0x20003;
+    private static int DEFAULT_LOAD_ITEM_COUNT = 3; //默认加载三个产品
+    private int loadStatus;
+
+    private Handler mHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case LOAD_ID_FINISHED:
+                    break;
+                case LOAD_CATEGORY_FINISH:
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +83,9 @@ public class DetailsActivity extends BaseActivity {
         categoryId = getIntent().getStringExtra("categoryId");
         mDialog = new WaittingDialog(DetailsActivity.this);
         fragment = (DetailsFragment) getSupportFragmentManager().findFragmentById(R.id.buyDetails_fragment);
-        registerReceiver(mBroadcastReceiver, new IntentFilter(CommonConstants.BROADCAST_FILTER_AUTO_LOAD_DATA));
+        IntentFilter filter = new IntentFilter(CommonConstants.BROADCAST_FILTER_AUTO_LOAD_DATA);
+        filter.addAction(CommonConstants.BROADCAST_FILTER_ONLY_LOAD_ONE);
+        registerReceiver(mBroadcastReceiver, filter);
 
         getProductDetails(id);
 
@@ -69,20 +96,15 @@ public class DetailsActivity extends BaseActivity {
      * 产品详情
      */
     private void getProductDetails(String id){
-        HashMap<String, Object> stringObjectHashMap = getgoodsDetailsRequestParams(id);
+        HashMap<String, Object> stringObjectHashMap = ApiHelper.getGoodsDetailsRequestParams(id);
         OkHttpUtil.sendRequest(URL.GOOD_DETAILS, stringObjectHashMap, new HttpRequestCallback(){
-            @Override
-            public void onStart() {
-                super.onStart();
-            }
-
             @Override
             public void onSuccess(String json) {
                 HttpResponseBean<BuyGoodDetailsBean> buyGoodDetailsBean2 = JsonUtil.json2Bean(json, new TypeToken<HttpResponseBean<BuyGoodDetailsBean>>() { });
                 if (buyGoodDetailsBean2.isSuccess()) {
                     BuyGoodDetailsBean buyGoodDetailsBean = buyGoodDetailsBean2.getData();
-                    LogUtil.e(TAG, "更新第" + (categoryIndex + 1) + "页 第" + (idIndex + 1) + "数据" );
-                    fragment.refreshData(buyGoodDetailsBean);
+                    dismissDialog();
+                    fragment.refreshData(buyGoodDetailsBean, isAutoScroll);
                 }else {
                     ToastUtil.showError(buyGoodDetailsBean2.getMessage());
                 }
@@ -95,19 +117,15 @@ public class DetailsActivity extends BaseActivity {
         });
     }
 
-    public HashMap<String, Object> getgoodsDetailsRequestParams(String id) {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("id", id);
-        return params;
-    }
-
     private long mTimeLast;
     private long mTimeSpace;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        LogUtil.e(TAG, "----------------> dispatchKeyEvent() ");
+        stopAutoScroll();
+        calculateTimer();
         if(event.getAction() == KeyEvent.ACTION_DOWN) {
-            calculateTimer();
             long nowTime = SystemClock.elapsedRealtime();
             long mTimeDelay = nowTime - this.mTimeLast;
             this.mTimeLast = nowTime;
@@ -116,6 +134,15 @@ public class DetailsActivity extends BaseActivity {
                 return true;
             }
             this.mTimeSpace = 0L;
+
+//            if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+//                clickLeftKey();
+//                return true;
+//            }
+//            if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+//                clickRightKey();
+//                return true;
+//            }
         }
         return super.dispatchKeyEvent(event);
     }
@@ -153,13 +180,13 @@ public class DetailsActivity extends BaseActivity {
      * 自动执行任务
      */
     private void executeTask(){
-        fragment.getScrollableView().stop();
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
 //                sendBroadcast(new Intent(CommonConstants.BROADCAST_FILTER));
 //                DetailsActivity.this.finish();
                 autoLoadNextData();
+//                startAutoScroll();
             }
         }, 1000);
     }
@@ -173,13 +200,13 @@ public class DetailsActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    private int categoryIndex;
-    private int idIndex;
+    private int categoryIndex; //分类索引
+    private int idIndex; //di索引
 
     /**
      * 产品列表
      */
-    private void getLProductList(String categoryId){
+    private void getLProductList(String categoryId, final int flag){
         HashMap<String, Object> stringObjectHashMap = ApiHelper.getgetProductListRequestParams(null, null, categoryId, null, null, String.valueOf(1), String.valueOf(8), null, null, null, "0", null);
         stringObjectHashMap.put("size", "15");
         OkHttpUtil.sendRequest(URL.URLSTRING_PRODUCTSLIST, stringObjectHashMap, new HttpRequestCallback(){
@@ -193,8 +220,29 @@ public class DetailsActivity extends BaseActivity {
                     for (ProductBean.RowsEntity rowsEntity:rows) {
                         ids.add(rowsEntity.get_id());
                     }
-                    idIndex = getIdIndex(ids);
-                    LogUtil.e(TAG, "当前是第" + (categoryIndex + 1) + "页 第" + (idIndex + 1) + "数据" );
+                    switch (flag) {
+                        case FIRST_ITME: // 加载第一条
+                            if (ids.size() > 0) {
+                                idIndex = 0;
+                            }
+                            break;
+                        case LAST_ITME: //加载最后一条
+                            if (ids.size() > 0) {
+                                idIndex = ids.size() - 1;
+                            }
+                            break;
+                        case FIND_INDEX_BY_ID:
+
+                            // 默认加载数据
+                            idIndex = getIdIndex(ids);
+                            loadNextData(DEFAULT_LOAD_ITEM_COUNT);
+                            break;
+                    }
+
+                    if (isNeedLoadNextData) {
+                        getProductDetails(ids.get(idIndex));
+                        isNeedLoadNextData = false;
+                    }
                 }
             }
 
@@ -208,13 +256,13 @@ public class DetailsActivity extends BaseActivity {
     /**
      * 获取当前category所在位置
      */
-    private void getCategoryIndex(){
+    private int getCategoryIndex(){
         for(int i = 0; i < CommonConstants.CAGEGORYS.length; i ++) {
             if ((CommonConstants.CAGEGORYS[i]).equals(categoryId)) {
-                categoryIndex = i;
-                return ;
+                return i;
             }
         }
+        return 0;
     }
 
     /**
@@ -229,35 +277,18 @@ public class DetailsActivity extends BaseActivity {
         return 0;
     }
 
-    private void autoLoadNextData(){
-        if (idIndex < 0 || idIndex >= ids.size()) {
-            LogUtil.e(TAG, "--------------> 加载有误！");
-            return;
-        }
-
-        // 最后一条了
-        if (idIndex == ids.size() - 1) {
-            categoryIndex++ ;
-            int i = categoryIndex % CommonConstants.CAGEGORYS.length;
-            String cagegoryId = CommonConstants.CAGEGORYS[i];
-            getLProductList(cagegoryId);
-        } else {
-            idIndex++;
-            String id = ids.get(idIndex);
-            getProductDetails(id);
-        }
-    }
-
     /**
      * 初始化操作
      */
     private void init(){
-        getCategoryIndex();
-        getLProductList(categoryId);
+        mDialog = new WaittingDialog(DetailsActivity.this);
+        categoryIndex = getCategoryIndex();
+        getLProductList(categoryId, FIND_INDEX_BY_ID);
     }
 
     @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        LogUtil.e(TAG, "----------------> onKeyDown() ");
         switch (keyCode) {
             case KeyEvent.KEYCODE_DPAD_CENTER:
             case KeyEvent.KEYCODE_ENTER:
@@ -265,27 +296,218 @@ public class DetailsActivity extends BaseActivity {
                 break;
             case KeyEvent.KEYCODE_DPAD_UP:
             case KeyEvent.KEYCODE_DPAD_DOWN:
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-                break;
+//            case KeyEvent.KEYCODE_DPAD_LEFT:
+//                clickLeftKey();
+//                return true;
+//            case KeyEvent.KEYCODE_DPAD_RIGHT:
+//                clickRightKey();
+//                return true;
         }
-        return super.onKeyUp(keyCode, event);
+        return super.onKeyDown(keyCode, event);
     }
 
-
-    private Handler mHandler = new Handler(Looper.getMainLooper());
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             LogUtil.e(TAG, "------------>收到广播， 更新数据");
+            String action = intent.getAction();
+            if (action == null) {
+                return;
+            }
+            switch (action) {
+                case CommonConstants.BROADCAST_FILTER_AUTO_LOAD_DATA:
+                    stopAutoScroll();
 //            isWaitUserOpera = false;
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    autoLoadNextData();
-                }
-            }, 3000);
-
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            autoLoadNextData();
+                        }
+                    }, 1000);
+                    break;
+                case CommonConstants.BROADCAST_FILTER_ONLY_LOAD_ONE:
+                    if (loadStatus == LOAD_ID_FINISHED) {
+                        loadNextData(1);
+                    }
+                    break;
+            }
         }
     };
+
+    private void stopAutoScroll(){
+        if (fragment == null) {
+            return;
+        }
+        ScrollableView scrollableView = fragment.getScrollableView();
+        if (scrollableView != null) {
+            scrollableView.stop();
+        }
+    }
+
+    private void startAutoScroll(){
+        if (fragment == null) {
+            return;
+        }
+        ScrollableView scrollableView = fragment.getScrollableView();
+        if (scrollableView != null) {
+            scrollableView.start();
+        }
+    }
+
+    /**
+     * 自动加载下一条数据
+     */
+    private void autoLoadNextData(){
+        fragment.dismissProductQrCode();
+        isAutoScroll = true;
+        if (idIndex < 0 || idIndex >= ids.size()) {
+            LogUtil.e(TAG, "--------------> 加载有误！");
+            return;
+        }
+
+        // 最后一条了
+        if (idIndex == ids.size() - 1) {
+            int  i = categoryIndex;
+            categoryIndex = ++i % CommonConstants.CAGEGORYS.length;
+            String cagegoryId = CommonConstants.CAGEGORYS[categoryIndex];
+            isNeedLoadNextData = true;
+            getLProductList(cagegoryId, FIRST_ITME);
+        } else {
+            idIndex++;
+            String id = ids.get(idIndex);
+            getProductDetails(id);
+        }
+    }
+
+
+    private void clickLeftKey(){
+        showDialog();
+        LogUtil.e(TAG, "----------加载上一页");
+        isAutoScroll = false;
+
+        // 第一条
+        if (idIndex == 0) {
+            int i = categoryIndex;
+            if (i == 0) {
+                categoryIndex = CommonConstants.CAGEGORYS.length - 1;
+            } else {
+                categoryIndex--;
+            }
+            String cagegoryId = CommonConstants.CAGEGORYS[categoryIndex];
+            isNeedLoadNextData = true;
+            getLProductList(cagegoryId, LAST_ITME);
+        } else {
+            idIndex--;
+            String id = ids.get(idIndex);
+            getProductDetails(id);
+        }
+    }
+
+    private void clickRightKey(){
+        showDialog();
+        LogUtil.e(TAG, "----------加载下一页");
+        isAutoScroll = false;
+        // 最后一条了
+        if (idIndex == ids.size() - 1) {
+            int  i = categoryIndex;
+            categoryIndex = ++i % CommonConstants.CAGEGORYS.length;
+            String cagegoryId = CommonConstants.CAGEGORYS[categoryIndex];
+            isNeedLoadNextData = true;
+            getLProductList(cagegoryId, FIRST_ITME);
+        } else {
+            idIndex++;
+            String id = ids.get(idIndex);
+            getProductDetails(id);
+        }
+    }
+
+    private void showDialog(){
+        if (mDialog != null && !mDialog.isShowing()) {
+            mDialog.show();
+        }
+    }
+
+    private void dismissDialog(){
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
+    }
+
+    /**
+     * 加载下一条数据
+     */
+    private void loadNextData(int loadItemCount){
+        if (loadItemCount == 0) {
+            // do nothing
+            loadStatus = LOAD_ID_FINISHED;
+        } else {
+            loadStatus = LOAD_ID_LOADING;
+            if (idIndex < 0 || idIndex >= ids.size()) {
+                LogUtil.e(TAG, "--------------> 加载有误！");
+                return;
+            }
+
+            // 最后一条了
+            if (idIndex == ids.size() - 1) {
+                int  tempIndex = categoryIndex;
+                categoryIndex = ++tempIndex % CommonConstants.CAGEGORYS.length;
+                String cagegoryId = CommonConstants.CAGEGORYS[categoryIndex];
+
+                // 加载下一页的第一条
+
+                loadStatus = LOAD_CATEGORY_LOADING;
+                loadProductList(cagegoryId, loadItemCount);
+            } else {
+                idIndex++;
+                String id = ids.get(idIndex);
+                loadProductDetails(id, loadItemCount);
+            }
+        }
+    }
+
+
+    private void loadProductList(String categoryId, final int loadItemCount){
+        HashMap<String, Object> stringObjectHashMap = ApiHelper.getgetProductListRequestParams(null, null, categoryId, null, null, String.valueOf(1), String.valueOf(8), null, null, null, "0", null);
+        stringObjectHashMap.put("size", "15");
+        OkHttpUtil.sendRequest(URL.URLSTRING_PRODUCTSLIST, stringObjectHashMap, new HttpRequestCallback(){
+
+            @Override
+            public void onSuccess(String json) {
+                HttpResponseBean<ProductBean> productBean = JsonUtil.json2Bean(json, new TypeToken<HttpResponseBean<ProductBean>>() {});
+                if (productBean.isSuccess()) {
+                    List<ProductBean.RowsEntity> rows = productBean.getData().getRows();
+                    ids = new ArrayList<>();
+                    for (ProductBean.RowsEntity rowsEntity:rows) {
+                        ids.add(rowsEntity.get_id());
+                    }
+                    loadStatus = LOAD_CATEGORY_FINISH;
+                    idIndex = 0;
+                    loadProductDetails(ids.get(idIndex), loadItemCount);
+                }
+            }
+
+            @Override
+            public void onFailure(IOException e) {}
+        });
+    }
+
+    private void loadProductDetails(String id, final int loadItemCount){
+        loadStatus = LOAD_ID_LOADING;
+        HashMap<String, Object> stringObjectHashMap = ApiHelper.getGoodsDetailsRequestParams(id);
+        OkHttpUtil.sendRequest(URL.GOOD_DETAILS, stringObjectHashMap, new HttpRequestCallback(){
+            @Override
+            public void onSuccess(String json) {
+                HttpResponseBean<BuyGoodDetailsBean> buyGoodDetailsBean2 = JsonUtil.json2Bean(json, new TypeToken<HttpResponseBean<BuyGoodDetailsBean>>() { });
+                if (buyGoodDetailsBean2.isSuccess()) {
+                    BuyGoodDetailsBean buyGoodDetailsBean = buyGoodDetailsBean2.getData();
+                    fragment.refreshData(buyGoodDetailsBean, isAutoScroll);
+                    int tempItemCount = loadItemCount;
+                    loadNextData(--tempItemCount );
+                }
+            }
+
+            @Override
+            public void onFailure(IOException e) {}
+        });
+    }
 }

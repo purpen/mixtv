@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.taihuoniao.fineix.tv.R;
 import com.taihuoniao.fineix.tv.activity.DetailsActivity;
+import com.taihuoniao.fineix.tv.bean.ViewPagerDataBean;
 import com.taihuoniao.fineix.tv.common.WaittingDialog;
 import com.taihuoniao.fineix.tv.utils.GlideUtil;
 import com.taihuoniao.fineix.tv.utils.LogUtil;
@@ -18,17 +19,16 @@ import java.util.List;
 public class ViewPagerAdapter<T> extends RecyclingPagerAdapter {
     private final String TAG = getClass().getSimpleName();
     private Activity activity;
-    private List<T> list;
+    private List<ViewPagerDataBean> list;
     private int size;
     private boolean isInfiniteLoop;
-    private String code;
     private WaittingDialog dialog;
 
     public int getSize() {
         return size;
     }
 
-    public ViewPagerAdapter(final Activity activity, List<T> list) {
+    public ViewPagerAdapter(final Activity activity, List<ViewPagerDataBean> list) {
         this.activity = activity;
         this.list = list;
         this.size = (list == null ? 0 : list.size());
@@ -50,7 +50,7 @@ public class ViewPagerAdapter<T> extends RecyclingPagerAdapter {
      * @return
      */
     private int getPosition(int position) {
-        return isInfiniteLoop ? position % size : position;
+        return isInfiniteLoop ? (position) % size : position;
     }
 
     @Override
@@ -65,57 +65,12 @@ public class ViewPagerAdapter<T> extends RecyclingPagerAdapter {
             holder = (ViewHolder) view.getTag(R.id.glide_image_tag);
         }
         int position1 = getPosition(position);
-        if (position1 == list.size()) {
-            LogUtil.e(TAG, "数组下表越界： position1 : " + position1 + " | size：" + size);
-            position1 = 0;
+        final ViewPagerDataBean content = list.get(position1);
+        if (TextUtils.isEmpty(content.getImageUrl())) {
+            ToastUtil.showError("图片链接为空");
+        } else {
+            GlideUtil.displayImage(content.getImageUrl(), holder.imageView);
         }
-        final T content = list.get(position1);
-
-//        if (content instanceof BannerBean.RowsBean) {
-//            GlideUtil.displayImage(((BannerBean.RowsBean) content).cover_url, holder.imageView);
-//        }
-
-        if (content instanceof Integer) {
-            holder.imageView.setImageResource((Integer) content);
-        }
-
-        if (content instanceof String) {
-            if (TextUtils.isEmpty((String) content)) {
-                ToastUtil.showError("图片链接为空");
-            } else {
-                GlideUtil.displayImage(content, holder.imageView);
-            }
-        }
-
-
-//        if (activity instanceof UserGuideActivity) {
-//            if (position == size - 1) {
-//                view.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (TextUtils.isEmpty(UserGuideActivity.fromPage)) {
-//                            activity.startActivity(new Intent(activity, MainActivity.class));
-//                            activity.finish();
-////                            isNeedCode();
-//                        } else {
-//                            UserGuideActivity.fromPage = null;
-//                            activity.finish();
-//                        }
-//                    }
-//                });
-//            }
-//        }
-
-//        if (activity instanceof MainActivity) {
-//            view.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    final BannerBean.RowsBean banner = (BannerBean.RowsBean) content;
-//                    GoToNextUtils.goToIntent(activity, Integer.valueOf(banner.type), banner.web_url);
-//
-//                }
-//            });
-//        }
         if (activity instanceof DetailsActivity) {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -128,7 +83,6 @@ public class ViewPagerAdapter<T> extends RecyclingPagerAdapter {
                 }
             });
         }
-
         return view;
     }
 
@@ -156,8 +110,33 @@ public class ViewPagerAdapter<T> extends RecyclingPagerAdapter {
      * 替换数据
      * @param list
      */
-    public void setList(List<T> list) {
+    public void setList(List<ViewPagerDataBean> list) {
+        if (this.list != null) {
+            this.list.clear();
+        }
         this.list = list;
         this.size = (list == null ? 0 : list.size());
+    }
+
+    /**
+     * 添加数据
+     * @param list
+     */
+    public void addList(List<ViewPagerDataBean> list) {
+        if (this.list == null) {
+            this.list = list;
+        } else {
+            this.list.addAll(list);
+        }
+        this.size = (list == null ? 0 : this.list.size());
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 返回数据集
+     * @return
+     */
+    public List<ViewPagerDataBean> getList(){
+        return list;
     }
 }

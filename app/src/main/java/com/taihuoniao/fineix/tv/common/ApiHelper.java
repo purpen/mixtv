@@ -42,4 +42,10 @@ public class ApiHelper {
         params.put("stage", stage);
         return params;
     }
+
+    public static HashMap<String, Object> getGoodsDetailsRequestParams(String id) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        return params;
+    }
 }

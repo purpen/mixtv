@@ -21,6 +21,7 @@ public class CommonConstants {
 
     public static final String BROADCAST_FILTER = "AutoKeyEvent";
     public static final String BROADCAST_FILTER_AUTO_LOAD_DATA = "AutoLoadNextData";
+    public static final String BROADCAST_FILTER_ONLY_LOAD_ONE = "AutoLoadOneData";
     public static final long DELAYMILLIS_MAINPAGE = 1000 * 10;
     public static final long DELAYMILLIS_DETAILSPAGE = 1000 * 10;
 

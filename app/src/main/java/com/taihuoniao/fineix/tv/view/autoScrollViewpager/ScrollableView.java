@@ -33,6 +33,7 @@ public class ScrollableView extends RelativeLayout {
     private TextView tvNum;
     private TextView tvDistance;
     private int size;
+    private ViewPagerAdapter adapter;
 
     public ScrollableView(Context context) {
         this(context, null);
@@ -49,6 +50,7 @@ public class ScrollableView extends RelativeLayout {
     }
 
     public void setAdapter(ViewPagerAdapter adapter) {
+        this.adapter = adapter;
         viewPager.setAdapter(adapter);
         this.size=adapter.getSize();
     }
@@ -81,11 +83,15 @@ public class ScrollableView extends RelativeLayout {
     }
 
     public void start(){
-        viewPager.startAutoScroll();
+        if (!viewPager.isAutoScroll()) {
+            viewPager.startAutoScroll();
+        }
     }
 
     public void stop(){
-        viewPager.stopAutoScroll();
+        if (viewPager.isAutoScroll()) {
+            viewPager.stopAutoScroll();
+        }
     }
 
     public void showIndicators() {
@@ -106,6 +112,7 @@ public class ScrollableView extends RelativeLayout {
             }
             imageViews.add(imageView);
             ll.addView(imageView, llp);
+            ll.setVisibility(GONE);
         }
         addOnPageChangeListener(new CustomOnPageChangeListener());
     }
@@ -129,11 +136,12 @@ public class ScrollableView extends RelativeLayout {
     private class CustomOnPageChangeListener implements ViewPager.OnPageChangeListener {
         @Override
         public void onPageSelected(int position) {
+            int size = adapter.getSize();
             currentItem=position = position % size;
-            tvNum.setText((position+1)+"/"+size);
-            setCurFocus(position);
+            tvNum.setText((position+1)+"/"+ size);
+//            setCurFocus(position);
             if (mOnPageChangedListener != null) {
-                mOnPageChangedListener.onPageSelected(size, position);
+                mOnPageChangedListener.onPageSelected(size, position, adapter.getList().get(position) );
             }
         }
 
@@ -168,7 +176,7 @@ public class ScrollableView extends RelativeLayout {
 
     private OnPageChangedListener mOnPageChangedListener;
     public interface OnPageChangedListener{
-        void onPageSelected(int total, int position);
+        void onPageSelected(int total, int position, Object o);
     }
 
     public void setOnPageChangeListener(OnPageChangedListener onPageChangeListener) {
