@@ -10,7 +10,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.view.View;
 
 import com.google.gson.reflect.TypeToken;
 import com.taihuoniao.fineix.tv.R;
@@ -28,14 +30,11 @@ import com.taihuoniao.fineix.tv.utils.JsonUtil;
 import com.taihuoniao.fineix.tv.utils.LogUtil;
 import com.taihuoniao.fineix.tv.utils.OkHttpUtil;
 import com.taihuoniao.fineix.tv.utils.ToastUtil;
-import com.taihuoniao.fineix.tv.view.autoScrollViewpager.ScrollableView;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Stephen on 2017/11/9 18:34
@@ -61,6 +60,11 @@ public class DetailsActivity extends BaseActivity {
     private static final int LOAD_CATEGORY_FINISH = 0x20003;
     private static int DEFAULT_LOAD_ITEM_COUNT = 3; //默认加载三个产品
     private int loadStatus;
+    private long mTimeLast;
+    private long mTimeSpace;
+    private int categoryIndex; //分类索引
+    private int idIndex; //di索引
+
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -117,24 +121,12 @@ public class DetailsActivity extends BaseActivity {
         });
     }
 
-    private long mTimeLast;
-    private long mTimeSpace;
-
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         LogUtil.e(TAG, "----------------> dispatchKeyEvent() ");
-        stopAutoScroll();
-        calculateTimer();
+        resetTimerTask();
         if(event.getAction() == KeyEvent.ACTION_DOWN) {
-            long nowTime = SystemClock.elapsedRealtime();
-            long mTimeDelay = nowTime - this.mTimeLast;
-            this.mTimeLast = nowTime;
-            if(this.mTimeSpace <= 80L && mTimeDelay <= 80L) {
-                this.mTimeSpace += mTimeDelay;
-                return true;
-            }
-            this.mTimeSpace = 0L;
-
+            if (delayResponseKeyEvent()) return true;
 //            if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
 //                clickLeftKey();
 //                return true;
@@ -146,62 +138,6 @@ public class DetailsActivity extends BaseActivity {
         }
         return super.dispatchKeyEvent(event);
     }
-
-    private Timer timer;
-    private long currentMillis;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        calculateTimer();
-    }
-
-    /**
-     * 倒计时操作
-     */
-    private void calculateTimer(){
-        if (timer != null) {
-            timer.cancel();
-        }
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if ((currentMillis += 1000) == CommonConstants.DELAYMILLIS_DETAILSPAGE) {
-                    executeTask();
-                    timer.cancel();
-                }
-            }
-        }, 1000, 1000);
-        currentMillis = 0;
-    }
-
-    /**
-     * 自动执行任务
-     */
-    private void executeTask(){
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                sendBroadcast(new Intent(CommonConstants.BROADCAST_FILTER));
-//                DetailsActivity.this.finish();
-                autoLoadNextData();
-//                startAutoScroll();
-            }
-        }, 1000);
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (timer != null) {
-            timer.cancel();
-        }
-        unregisterReceiver(mBroadcastReceiver);
-        super.onDestroy();
-    }
-
-    private int categoryIndex; //分类索引
-    private int idIndex; //di索引
 
     /**
      * 产品列表
@@ -317,7 +253,6 @@ public class DetailsActivity extends BaseActivity {
             switch (action) {
                 case CommonConstants.BROADCAST_FILTER_AUTO_LOAD_DATA:
                     stopAutoScroll();
-//            isWaitUserOpera = false;
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -334,23 +269,21 @@ public class DetailsActivity extends BaseActivity {
         }
     };
 
+    /**
+     * 停止自动轮播
+     */
     private void stopAutoScroll(){
-        if (fragment == null) {
-            return;
-        }
-        ScrollableView scrollableView = fragment.getScrollableView();
-        if (scrollableView != null) {
-            scrollableView.stop();
+        if (fragment != null) {
+            fragment.stopAutoScroll();
         }
     }
 
+    /**
+     * 开始自动轮播
+     */
     private void startAutoScroll(){
-        if (fragment == null) {
-            return;
-        }
-        ScrollableView scrollableView = fragment.getScrollableView();
-        if (scrollableView != null) {
-            scrollableView.start();
+        if (fragment != null) {
+            fragment.startAutoScroll();
         }
     }
 
@@ -509,5 +442,54 @@ public class DetailsActivity extends BaseActivity {
             @Override
             public void onFailure(IOException e) {}
         });
+    }
+
+    /**
+     * 处理按键响应时间，两次间隔小鱼80毫秒则不响应事件
+     * @return true/false
+     */
+    private boolean delayResponseKeyEvent() {
+        long nowTime = SystemClock.elapsedRealtime();
+        long mTimeDelay = nowTime - this.mTimeLast;
+        this.mTimeLast = nowTime;
+        if(this.mTimeSpace <= 80L && mTimeDelay <= 80L) {
+            this.mTimeSpace += mTimeDelay;
+            return true;
+        }
+        this.mTimeSpace = 0L;
+        return false;
+    }
+
+    /**
+     * 定时任务
+     */
+    private Runnable autoKeyEventTask = new Runnable(){
+
+        @Override
+        public void run() {
+            startAutoScroll();
+        }
+    };
+
+    /**
+     * 重置定时任务-倒计时操作
+     */
+    private void resetTimerTask(){
+        stopAutoScroll();
+        mHandler.removeCallbacks(autoKeyEventTask);
+        mHandler.postDelayed(autoKeyEventTask, CommonConstants.DELAYMILLIS_DETAILSPAGE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        resetTimerTask();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mHandler.removeCallbacks(autoKeyEventTask);
+        unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
     }
 }

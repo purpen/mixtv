@@ -74,19 +74,9 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        startAutoScroll();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        stopAutoScroll();
-    }
-
-    //用来刷新页面
+    /**
+     * 用来刷新页面
+     */
     public void refreshData(BuyGoodDetailsBean dataBean, boolean isAutoScroll) {
         this.mbuyGoodDetailsBean = dataBean;
         if (dataBean == null) {
@@ -101,15 +91,12 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
             holder.scrollableView.setAutoScrollDurationFactor(8);
             holder.scrollableView.setInterval(4000);
             holder.scrollableView.showIndicators();
-            holder.scrollableView.start();
+//            holder.scrollableView.start();
             refreshUi(viewPagerDataBeans.get(0).getInfoBean());
         } else {
             LogUtil.e(TAG, "------------------ 加载数据 viewPager + " + mbuyGoodDetailsBean.getAsset().size() + "条");
             viewPagerAdapter.addList(convertUsefulDataList(mbuyGoodDetailsBean));
             viewPagerAdapter.notifyDataSetChanged();
-            if (isAutoScroll) {
-                startAutoScroll();
-            }
         }
 //        holder.buttonLeft.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -189,14 +176,11 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
         }
         if (total - position < 10) {
             LogUtil.e(TAG, "--------------发送广播");
-            getContext().sendBroadcast(new Intent(CommonConstants.BROADCAST_FILTER_ONLY_LOAD_ONE));
+            if (isAdded()) {
+                getContext().sendBroadcast(new Intent(CommonConstants.BROADCAST_FILTER_ONLY_LOAD_ONE));
+            }
         }
     }
-
-    public ScrollableView getScrollableView(){
-        return holder.scrollableView;
-    }
-
     private Dialog mDialog;
 
     /**
@@ -258,7 +242,7 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
     /**
      * 停止自动轮播
      */
-    private void stopAutoScroll(){
+    public void stopAutoScroll(){
         if (holder.scrollableView != null) {
             holder.scrollableView.stop();
         }
@@ -267,7 +251,7 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
     /**
      * 开始自动轮播
      */
-    private void startAutoScroll(){
+    public void startAutoScroll(){
         if (holder.scrollableView != null) {
             holder.scrollableView.start();
         }
