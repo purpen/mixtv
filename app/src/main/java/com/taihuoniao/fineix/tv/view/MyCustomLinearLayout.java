@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.taihuoniao.fineix.tv.R;
 import com.taihuoniao.fineix.tv.activity.ActivityLogin;
 import com.taihuoniao.fineix.tv.adapter.CFragmentPagerAdapter;
+import com.taihuoniao.fineix.tv.adapter.ListRecyclerViewAdapter;
 import com.taihuoniao.fineix.tv.adapter.TitleRecyclerViewAdapter;
 import com.taihuoniao.fineix.tv.base.BaseFragment;
 import com.taihuoniao.fineix.tv.bean.HttpResponseBean;
@@ -171,7 +172,7 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
                         View focusedChild = recyclerView.getFocusedChild();
                         int childAdapterPosition = recyclerView.getChildAdapterPosition(focusedChild);
                         if (childAdapterPosition < App.pageDisplayColumns) {
-                            mRecyclerView.requestFocus();
+                            reFocusTitleRecyclerViewItem();
                         } else {
                             int i = childAdapterPosition - App.pageDisplayColumns;
                             LogUtil.e(TAG, "----------- childAdapterPosition " + i);
@@ -189,10 +190,10 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
                     break;
                 case KeyEvent.KEYCODE_DPAD_DOWN:
                     if (mRelativeLayout.hasFocus()) {
-                        mRecyclerView.requestFocus();
+                        reFocusTitleRecyclerViewItem();
                         return true;
                     } else if (mRecyclerView.hasFocus()) {
-                        mViewPager.requestFocus();
+                        reFocusViewPagerRecyclerViewItem();
                         return true;
                     }
                     break;
@@ -221,43 +222,10 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
     public void onFocusChange(View v, boolean hasFocus) {
         if (v == this && hasFocus) {
             mRecyclerView.requestFocus();
-        } else if (v == mRecyclerView && hasFocus) {
-            // 获取导航栏的第一个条目
-        } else if (v == mViewPager && hasFocus) {
-
-        } else if (v == imageViewReverse) {
-            ImageView imageView = (ImageView) imageViewReverse.getChildAt(0);
-            TextView textView = (TextView) imageViewReverse.getChildAt(1);
-            if (hasFocus) {
-                imageView.setVisibility(VISIBLE);
-                textView.setText("切换竖屏");
-                textView.setVisibility(VISIBLE);
-                imageViewReverse.setBackgroundResource(R.mipmap.bg_button);
-            } else {
-                imageView.setVisibility(GONE);
-                textView.setVisibility(GONE);
-                imageViewReverse.setBackgroundResource(R.mipmap.icon_reverse_screen);
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewReverse.getLayoutParams();
-                layoutParams.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
-                layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
-            }
-
+        }else if (v == imageViewReverse) {
+            onFocusChangeWithImageReverse(hasFocus);
         } else if (v == imageViewLogout) {
-            ImageView imageView = (ImageView) imageViewLogout.getChildAt(0);
-            TextView textView = (TextView) imageViewLogout.getChildAt(1);
-            if (hasFocus) {
-                imageView.setVisibility(VISIBLE);
-                textView.setText("退出登录");
-                textView.setVisibility(VISIBLE);
-                imageViewLogout.setBackgroundResource(R.mipmap.bg_button);
-            } else {
-                imageView.setVisibility(GONE);
-                textView.setVisibility(GONE);
-                imageViewLogout.setBackgroundResource(R.mipmap.icon_logout);
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewLogout.getLayoutParams();
-                layoutParams.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
-                layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
-            }
+            onFocusChangeWithImageViewLogout(hasFocus);
         }
     }
 
@@ -439,4 +407,80 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
     }
 
     private boolean isWaitUserOpera = true;
+
+    /**
+     * 让焦点重新回到titleRecyclerView最后一次选中的Item上
+     */
+    private void reFocusTitleRecyclerViewItem() {
+        int lastSelectedPosition = titleRecyclerViewAdapter.getLastSelectedPosition();
+        if (lastSelectedPosition != -1) {
+            View viewByPosition = mRecyclerView.getLayoutManager().findViewByPosition(lastSelectedPosition);
+            if (viewByPosition != null) {
+                viewByPosition.requestFocus();
+            }
+        } else {
+            mRecyclerView.requestFocus();
+        }
+    }
+
+    /**
+     * 让焦点重新回到viewPager 下 recyclerView 最后一次选中的Item上
+     */
+    private void reFocusViewPagerRecyclerViewItem() {
+        RecyclerView recyclerView = getCurrentPageRecyclerView(mViewPager.getCurrentItem());
+        ListRecyclerViewAdapter adapter = (ListRecyclerViewAdapter) recyclerView.getAdapter();
+        int lastSelectedPosition = adapter.getLastSelectedPosition();
+        if (lastSelectedPosition != -1) {
+            View viewByPosition = recyclerView.getLayoutManager().findViewByPosition(lastSelectedPosition);
+            if (viewByPosition != null) {
+                viewByPosition.requestFocus();
+            }
+        } else {
+            mViewPager.requestFocus();
+        }
+    }
+
+    /**
+     * imageViewReverse焦点改变时
+     * @param hasFocus true/false
+     */
+    private void onFocusChangeWithImageReverse(boolean hasFocus) {
+        ImageView imageView = (ImageView) imageViewReverse.getChildAt(0);
+        TextView textView = (TextView) imageViewReverse.getChildAt(1);
+        if (hasFocus) {
+            imageView.setVisibility(VISIBLE);
+            textView.setText("切换竖屏");
+            textView.setVisibility(VISIBLE);
+            imageViewReverse.setBackgroundResource(R.mipmap.bg_button);
+        } else {
+            imageView.setVisibility(GONE);
+            textView.setVisibility(GONE);
+            imageViewReverse.setBackgroundResource(R.mipmap.icon_reverse_screen);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewReverse.getLayoutParams();
+            layoutParams.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+            layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        }
+    }
+
+    /**
+     * imageViewLogout焦点改变时
+     * @param hasFocus true/false
+     */
+    private void onFocusChangeWithImageViewLogout(boolean hasFocus) {
+        ImageView imageView = (ImageView) imageViewLogout.getChildAt(0);
+        TextView textView = (TextView) imageViewLogout.getChildAt(1);
+        if (hasFocus) {
+            imageView.setVisibility(VISIBLE);
+            textView.setText("退出登录");
+            textView.setVisibility(VISIBLE);
+            imageViewLogout.setBackgroundResource(R.mipmap.bg_button);
+        } else {
+            imageView.setVisibility(GONE);
+            textView.setVisibility(GONE);
+            imageViewLogout.setBackgroundResource(R.mipmap.icon_logout);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewLogout.getLayoutParams();
+            layoutParams.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+            layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        }
+    }
 }

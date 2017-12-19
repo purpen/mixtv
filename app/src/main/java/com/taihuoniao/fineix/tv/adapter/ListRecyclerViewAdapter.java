@@ -28,6 +28,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
     private GlobalCallBack mGlobalCallBack;
     private List<ProductBean.RowsEntity> list;
     private int focusPosition = -1;
+    private int lastSelectedPosition = -1;
 
     public ListRecyclerViewAdapter(Context context, GlobalCallBack globalCallBack) {
         this.mGlobalCallBack = globalCallBack;
@@ -60,14 +61,14 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             holder.name.setText(list.get(adapterPosition).getTitle());
             holder.price.setText("¥" + list.get(adapterPosition).getSale_price());
         }
-//        holder.itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    focusPosition = adapterPosition;
-//                }
-//            }
-//        });
+        holder.itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    lastSelectedPosition = adapterPosition;
+                }
+            }
+        });
     }
 
     @Override
@@ -99,5 +100,10 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
      */
     public int getFocusPosition(){
         return focusPosition;
+    }
+
+
+    public int getLastSelectedPosition(){
+        return lastSelectedPosition;
     }
 }

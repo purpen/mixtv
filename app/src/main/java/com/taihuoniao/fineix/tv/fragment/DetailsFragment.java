@@ -338,6 +338,9 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
             if (i == 0) {
                 ViewPagerDataBean.InfoBean infoBean = new ViewPagerDataBean.InfoBean(dataBean.getShare_view_url(), dataBean.getStage(), dataBean.get_id(), dataBean.getTitle(), dataBean.getSale_price(), dataBean.getMarket_price(), dataBean.getAdvantage(), asset.size());
                 viewPagerDataBean = new ViewPagerDataBean(asset.get(i), infoBean);
+            } else if (i == asset.size() - 1) { // 最后一条，左滑出现最后一条，将产品信息刷新
+                ViewPagerDataBean.InfoBean infoBean = new ViewPagerDataBean.InfoBean(dataBean.getShare_view_url(), dataBean.getStage(), dataBean.get_id(), dataBean.getTitle(), dataBean.getSale_price(), dataBean.getMarket_price(), dataBean.getAdvantage(), asset.size());
+                viewPagerDataBean = new ViewPagerDataBean(asset.get(i), infoBean);
             } else {
                 viewPagerDataBean = new ViewPagerDataBean(asset.get(i));
             }
