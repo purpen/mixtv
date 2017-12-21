@@ -14,5 +14,6 @@
         android:focusable="false"
         tools:context="com.taihuoniao.fineix.tv.MainActivity"
         tools:deviceIds="tv"
+        android:paddingBottom="20dp"
         tools:ignore="MergeRootFrame" />
 </LinearLayout>

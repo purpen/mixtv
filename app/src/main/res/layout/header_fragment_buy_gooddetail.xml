@@ -36,7 +36,7 @@
                 android:textStyle="bold"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/yellow_bd8913"
-                android:textSize="20sp" />
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/title"
@@ -47,7 +47,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp" />
+                android:textSize="19sp" />
 
             <TextView
                 android:id="@+id/market_price"

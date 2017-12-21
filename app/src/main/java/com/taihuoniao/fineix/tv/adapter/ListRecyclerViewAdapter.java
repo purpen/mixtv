@@ -2,6 +2,8 @@ package com.taihuoniao.fineix.tv.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +22,7 @@ import com.taihuoniao.fineix.tv.common.GlobalCallBack;
 import com.taihuoniao.fineix.tv.utils.GlideUtil;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Stephen on 2017/3/3 21:20
@@ -32,10 +35,17 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
     private GlobalCallBack mGlobalCallBack;
     private List<ProductBean.RowsEntity> list;
     private int lastSelectedPosition = -1;
+    private ItemWidthAndHeightParams itemWidthAndHeightParams;
 
     public ListRecyclerViewAdapter(Context context, GlobalCallBack globalCallBack) {
         this.mGlobalCallBack = globalCallBack;
         mLayoutInflater = LayoutInflater.from(context);
+    }
+
+    public ListRecyclerViewAdapter(Context context, GlobalCallBack globalCallBack, ItemWidthAndHeightParams itemWidthAndHeightParams) {
+        this.mGlobalCallBack = globalCallBack;
+        mLayoutInflater = LayoutInflater.from(context);
+        this.itemWidthAndHeightParams = itemWidthAndHeightParams;
     }
 
     @Override
@@ -43,7 +53,15 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         if (App.screenOrientation.equals(CommonConstants.SCREENORIENTATION_PORTRAIT)) {
             return new ListRecyclerViewAdapter.VH(mLayoutInflater.inflate(R.layout.item_recyclerview_product2, null));
         } else {
-            return new ListRecyclerViewAdapter.VH(mLayoutInflater.inflate(R.layout.item_recyclerview_product, null));
+            View inflate = mLayoutInflater.inflate(R.layout.item_recyclerview_product, parent, false);
+            VH vh = new VH(inflate);
+            if (itemWidthAndHeightParams != null) {
+                inflate.getLayoutParams().width = itemWidthAndHeightParams.width;
+                inflate.getLayoutParams().height = itemWidthAndHeightParams.height;
+                vh.productImg.getLayoutParams().width = itemWidthAndHeightParams.width;
+                vh.productImg.getLayoutParams().height = itemWidthAndHeightParams.width;
+            }
+            return vh;
         }
     }
 
@@ -113,6 +131,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
     private void itemViewOnFocusChange(View v, boolean hasFocus){
         TextView price = (TextView)v. findViewById(R.id.price);
         price.setTextColor(Color.parseColor(hasFocus ? "#FFFFFF" : "#FFBE28"));
+        price.setTextSize(hasFocus ? 17 : 15);
         LinearLayout linearLayout_information = (LinearLayout) v. findViewById(R.id.linearLayout_information);
         linearLayout_information.setBackgroundColor(Color.parseColor(hasFocus ? "#A0772C":"#212121"));
     }
@@ -123,8 +142,8 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
      * @param hasFocus hasFcus
      */
     private void itemViewOnFocusChange2(View v, boolean hasFocus){
-        float scaleX = hasFocus ? 1.17f : 1.0f;
-        float scaleY = hasFocus ? 1.17f : 1.0f;
+        float scaleX = hasFocus ? 1.1f : 1.0f;
+        float scaleY = hasFocus ? 1.1f : 1.0f;
         if (Build.VERSION.SDK_INT >= 21) {
             ViewCompat.animate(v).scaleX(scaleX).scaleY(scaleY).translationZ(1).start();
         } else {
@@ -132,6 +151,19 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             ViewGroup parent = (ViewGroup) v.getParent();
             parent.requestLayout();
             parent.invalidate();
+        }
+    }
+
+    public static class ItemWidthAndHeightParams{
+        private int width;
+        private int height;
+
+        public ItemWidthAndHeightParams() {
+        }
+
+        public ItemWidthAndHeightParams(int width, int height) {
+            this.width = width;
+            this.height = height;
         }
     }
 }

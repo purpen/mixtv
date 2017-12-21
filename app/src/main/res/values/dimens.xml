@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="recyclerViewItemDecorationSize">25dp</dimen>
+    <dimen name="recyclerViewItemDecorationSize">11dp</dimen>
     <dimen name="recyclerViewItemWidthSize">154dp</dimen>
     <dimen name="recyclerViewItemWidthSize2">140dp</dimen>
 

@@ -82,7 +82,7 @@ public class ListFragment extends BaseFragment {
                     startActivity(intent);
                 }
             }
-        });
+        }, caculateItemViewWidthHeightByLandScape());
         mRecyclerView.setAdapter(mListAdapter);
     }
 
@@ -152,14 +152,14 @@ public class ListFragment extends BaseFragment {
  *  itemBorderWidth = ( 整个屏幕的宽 - itemWidth * 5 - RecyclerView marginWidth ) / 5 * 2
  */
     private float caculateItemBorderWidthLandScape() {
-        int screenWidth = App.getContext().getScreenWidth();
-        int itemRecyclerViewWidth = getResources().getDimensionPixelSize(R.dimen.recyclerViewItemWidthSize);
-        int recyclerViewMarginWidth = getResources().getDimensionPixelSize(R.dimen.dp20) + getResources().getDimensionPixelSize(R.dimen.dp20);
-
-        float itemBorderWidth = (screenWidth - itemRecyclerViewWidth * 5 - recyclerViewMarginWidth) / 5 / 2;
-        LogUtil.e("------------- screenWidth : " + screenWidth + " | itemRecyclerViewWidth : " + itemRecyclerViewWidth + " | recyclerViewMarginWidth : " + recyclerViewMarginWidth);
-        LogUtil.e("------------- itemBorderWidth : " + itemBorderWidth);
-        return itemBorderWidth;
+//        int screenWidth = App.getContext().getScreenWidth();
+//        int itemRecyclerViewWidth = getResources().getDimensionPixelSize(R.dimen.recyclerViewItemWidthSize);
+//        int recyclerViewMarginWidth = getResources().getDimensionPixelSize(R.dimen.dp20) + getResources().getDimensionPixelSize(R.dimen.dp20);
+//
+//        float itemBorderWidth = (screenWidth - itemRecyclerViewWidth * 5 - recyclerViewMarginWidth) / 5 / 2;
+//        LogUtil.e("------------- screenWidth : " + screenWidth + " | itemRecyclerViewWidth : " + itemRecyclerViewWidth + " | recyclerViewMarginWidth : " + recyclerViewMarginWidth);
+//        LogUtil.e("------------- itemBorderWidth : " + itemBorderWidth);
+        return getResources().getDimensionPixelSize(R.dimen.recyclerViewItemDecorationSize);
     }
 
     private float caculateItemBorderWidth() {
@@ -177,5 +177,23 @@ public class ListFragment extends BaseFragment {
             mDialog = null;
         }
         super.onStop();
+    }
+
+    /*
+*  计算item的宽高
+*  itemBorderWidth = ( 整个屏幕的宽 - itemWidth * 5 - RecyclerView marginWidth ) / 5 * 2
+*/
+
+    /**
+     * 计算item的宽高
+     * itemWidth = ( 整个屏幕的宽 - recyclerViewMarginWidth - itemDecorationSize * 5 ) / 5
+     * @return width
+     */
+    private ListRecyclerViewAdapter.ItemWidthAndHeightParams caculateItemViewWidthHeightByLandScape() {
+        int screenWidth = App.getContext().getScreenWidth();
+        int recyclerViewMarginWidth = getResources().getDimensionPixelSize(R.dimen.dp20) + getResources().getDimensionPixelSize(R.dimen.dp20);
+        int itemDecorationSize = getResources().getDimensionPixelSize(R.dimen.recyclerViewItemDecorationSize);
+        float itemWidth = (screenWidth - recyclerViewMarginWidth - itemDecorationSize * 5 * 2 ) / 5;
+        return new ListRecyclerViewAdapter.ItemWidthAndHeightParams((int) itemWidth,(int) (itemWidth * 1.36f));
     }
 }

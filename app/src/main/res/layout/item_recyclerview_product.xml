@@ -2,22 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relayouLayout_container_wellGoods_product"
     android:layout_width="154dp"
-    android:layout_height="204dp"
+    android:layout_height="210dp"
     android:focusable="true"
+    android:elevation="15dp"
     android:padding="2dp">
+    <!--android:background="@drawable/background_with_shadow"-->
     <!--android:background="@drawable/background_focued_border"-->
 
     <ImageView
         android:id="@+id/product_img"
         android:layout_width="154dp"
         android:layout_height="154dp"
+        android:src="@mipmap/bg_default_load"
         android:scaleType="centerCrop"
-        android:src="@mipmap/icon_bg_logo" />
+         />
 
     <LinearLayout
         android:id="@+id/linearLayout_information"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
         android:layout_alignLeft="@id/product_img"
         android:layout_alignRight="@id/product_img"
         android:layout_below="@id/product_img"
@@ -34,7 +37,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:textColor="@color/white"
-            android:textSize="13sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/price"
@@ -45,6 +48,6 @@
             android:maxLines="1"
             android:textStyle="bold"
             android:textColor="#FFBE28"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 </RelativeLayout>
