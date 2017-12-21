@@ -23,14 +23,14 @@ public class RecycleViewItemDecoration extends RecyclerView.ItemDecoration{
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        int position = parent.getChildLayoutPosition(view);
+//        int position = parent.getChildLayoutPosition(view);
         int borderWidth = (int) margin;
         outRect.left = borderWidth;
         outRect.top = borderWidth;
         outRect.right= borderWidth;
         outRect.bottom = borderWidth;
-        if (position < App.pageDisplayColumns) {
-            outRect.top = 5 ;
-        }
+//        if (position < App.pageDisplayColumns) {
+//            outRect.top = 5 ;
+//        }
     }
 }

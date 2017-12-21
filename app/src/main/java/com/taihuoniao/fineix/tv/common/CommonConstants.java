@@ -22,12 +22,20 @@ public class CommonConstants {
     public static final String BROADCAST_FILTER = "AutoKeyEvent";
     public static final String BROADCAST_FILTER_AUTO_LOAD_DATA = "AutoLoadNextData";
     public static final String BROADCAST_FILTER_ONLY_LOAD_ONE = "AutoLoadOneData";
+
     public static final long DELAYMILLIS_MAINPAGE = 1000 * 10;
     public static final long DELAYMILLIS_DETAILSPAGE = 1000 * 10;
+    public static final long DELAYMILLIS_INTERVAL_TIME = 1000 * 4;
 
     /**
      * 测试帐号
      */
     public static final String TEST_ACCOUNT = "15001120509";
     public static final String TEST_SECRETKEY = "123456";
+
+    /**
+     * 等待时间设置
+     */
+    public static final String AUTO_EVENT_WAIT_TIME = "AutoEventWaitTime";
+    public static final String INTERVAL_WAIT_TIME = "IntervalWaitTime";
 }

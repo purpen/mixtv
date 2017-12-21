@@ -3,9 +3,9 @@
     android:id="@+id/relayouLayout_container_wellGoods_product"
     android:layout_width="154dp"
     android:layout_height="204dp"
-    android:background="@drawable/background_focued_border"
     android:focusable="true"
-    android:padding="7dp">
+    android:padding="2dp">
+    <!--android:background="@drawable/background_focued_border"-->
 
     <ImageView
         android:id="@+id/product_img"
@@ -15,6 +15,7 @@
         android:src="@mipmap/icon_bg_logo" />
 
     <LinearLayout
+        android:id="@+id/linearLayout_information"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignLeft="@id/product_img"

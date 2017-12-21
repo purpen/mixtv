@@ -29,7 +29,9 @@ import com.taihuoniao.fineix.tv.fragment.DetailsFragment;
 import com.taihuoniao.fineix.tv.utils.JsonUtil;
 import com.taihuoniao.fineix.tv.utils.LogUtil;
 import com.taihuoniao.fineix.tv.utils.OkHttpUtil;
+import com.taihuoniao.fineix.tv.utils.SPUtil;
 import com.taihuoniao.fineix.tv.utils.ToastUtil;
+import com.taihuoniao.fineix.tv.utils.TypeConversionUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,7 +66,7 @@ public class DetailsActivity extends BaseActivity {
     private long mTimeSpace;
     private int categoryIndex; //分类索引
     private int idIndex; //di索引
-
+    private long autoEventWaitTime;
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -94,6 +96,8 @@ public class DetailsActivity extends BaseActivity {
         getProductDetails(id);
 
         init();
+
+        readSettingInformation();
     }
 
     /**
@@ -477,19 +481,34 @@ public class DetailsActivity extends BaseActivity {
     private void resetTimerTask(){
         stopAutoScroll();
         mHandler.removeCallbacks(autoKeyEventTask);
-        mHandler.postDelayed(autoKeyEventTask, CommonConstants.DELAYMILLIS_DETAILSPAGE);
+        mHandler.postDelayed(autoKeyEventTask, autoEventWaitTime);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        resetTimerTask();
+        startAutoScroll();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mHandler.removeCallbacks(autoKeyEventTask);
     }
 
     @Override
     protected void onDestroy() {
-        mHandler.removeCallbacks(autoKeyEventTask);
         unregisterReceiver(mBroadcastReceiver);
         super.onDestroy();
+    }
+
+    private void readSettingInformation() {
+        String autoEventWaitTime2 = SPUtil.read(CommonConstants.AUTO_EVENT_WAIT_TIME);
+        if (TypeConversionUtils.StringConvertDouble(autoEventWaitTime2) > 0) {
+            autoEventWaitTime = (long) (TypeConversionUtils.StringConvertDouble(autoEventWaitTime2) * 1000D);
+        } else {
+            autoEventWaitTime = CommonConstants.DELAYMILLIS_DETAILSPAGE;
+        }
+        LogUtil.e(TAG, " -----Setting readSettingInformation----autoEventWaitTime: " + autoEventWaitTime);
     }
 }

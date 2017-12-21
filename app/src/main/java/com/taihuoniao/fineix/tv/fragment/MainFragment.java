@@ -277,4 +277,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         super.onResume();
         mCustomLinearLayout.resumeRecyclerViewFocusedView();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCustomLinearLayout.clearTimeTask();
+    }
 }

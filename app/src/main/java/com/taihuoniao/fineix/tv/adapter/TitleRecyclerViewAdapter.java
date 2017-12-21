@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.taihuoniao.fineix.tv.R;
+import com.taihuoniao.fineix.tv.utils.LogUtil;
 
 
 /**
@@ -39,8 +40,8 @@ public class TitleRecyclerViewAdapter extends RecyclerView.Adapter<TitleRecycler
     private OnBindListener onBindListener;
 
 
-    private View selectedViewIndicate;
     private View focusedView;
+    private View selectedViewIndicate;
     private int lastSelectedPosition = -1;
 
     public interface OnBindListener {
@@ -74,11 +75,14 @@ public class TitleRecyclerViewAdapter extends RecyclerView.Adapter<TitleRecycler
         if (mDataList == null || mDataList.length == 0) {
             return;
         }
+        viewHolder.mView.setBackgroundColor(Color.parseColor("#00000000"));
+        viewHolder.mView.setVisibility(View.GONE);
         viewHolder.mTextView.setText(mDataList[i]);
         viewHolder.itemView.setTag(i);
         viewHolder.itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                itemViewOnFocusChange(v,hasFocus);
                 if ( v == focusedView) {
                     return;
                 }
@@ -86,9 +90,9 @@ public class TitleRecyclerViewAdapter extends RecyclerView.Adapter<TitleRecycler
                     if (onBindListener != null) {
                         onBindListener.onBind(null, viewHolder.getAdapterPosition());
                     }
-                    setIndicatorSelectedPosition(v);
                     focusedView = v;
                     v.requestFocus();
+                    selectedViewIndicate = v;
                     lastSelectedPosition = viewHolder.getAdapterPosition();
                 }
             }
@@ -117,38 +121,49 @@ public class TitleRecyclerViewAdapter extends RecyclerView.Adapter<TitleRecycler
      * @param v
      */
     public void setIndicatorSelectedPosition(View v) {
+        LogUtil.e(TAG, "------------setIndicatorSelectedPosition 1");
         if (v == null) {
             return;
         }
+        LogUtil.e(TAG, "------------setIndicatorSelectedPosition 2");
         View view = v.findViewById(R.id.view_menu_indicate);
-        if (view != null) {
-            if (view == selectedViewIndicate) {
-                // do nothing
-            } else if (selectedViewIndicate == null) {
-                view.setBackgroundColor(Color.parseColor("#FFBE28"));
-            } else {
-                selectedViewIndicate.findViewById(R.id.view_menu_indicate).setBackgroundColor(Color.parseColor("#00FFFFFF"));
-                view.setBackgroundColor(Color.parseColor("#FFBE28"));
-            }
-            selectedViewIndicate = v;
-        }
+        LogUtil.e(TAG, "------------setIndicatorSelectedPosition 3");
+        view.setBackgroundColor(Color.parseColor("#FFBE28"));
+        LogUtil.e(TAG, "------------setIndicatorSelectedPosition 4");
+        view.setVisibility(View.VISIBLE);
+        LogUtil.e(TAG, "------------setIndicatorSelectedPosition 5" + (view.getVisibility() == View.VISIBLE));
+//        if (view != null) {
+//            if (view == selectedViewIndicate) {
+//                // do nothing
+//            } else if (selectedViewIndicate == null) {
+//                view.setBackgroundColor(Color.parseColor("#FFBE28"));
+//            } else {
+//                selectedViewIndicate.findViewById(R.id.view_menu_indicate).setBackgroundColor(Color.parseColor("#00FFFFFF"));
+//                view.setBackgroundColor(Color.parseColor("#FFBE28"));
+//            }
+//            selectedViewIndicate = v;
+//        }
     }
 
     public int getLastSelectedPosition(){
         return lastSelectedPosition;
     }
 
-    public void setFocusedViewStatus(View v, boolean hasfocus) {
-        if (v == null) {
-            return;
+    /**
+     * itemView 焦点改变时,改变字体颜色
+     * @param v v
+     * @param hasFocus hasFcus
+     */
+    private void itemViewOnFocusChange(View v, boolean hasFocus){
+        TextView textView = (TextView) v.findViewById(R.id.tv_menu_title);
+        textView.setTextColor(Color.parseColor(hasFocus ? "#FFFFFF" : "#C2C2C2"));
+        View view = v.findViewById(R.id.view_menu_indicate);
+        if (hasFocus) {
+            view.setVisibility(View.GONE);
         }
-        View view = v.findViewById(R.id.tv_menu_title);
-        if (view != null) {
-            if (hasfocus) {
-                view.setBackgroundResource(R.mipmap.bg_button);
-            } else {
-                view.setBackgroundColor(Color.parseColor("#00000000"));
-            }
-        }
+
+//        if (!hasFocus && selectedViewIndicate == v) {
+//            view.setVisibility(View.VISIBLE);
+//        }
     }
 }

@@ -25,6 +25,8 @@ import com.taihuoniao.fineix.tv.common.CommonConstants;
 import com.taihuoniao.fineix.tv.utils.DpUtil;
 import com.taihuoniao.fineix.tv.utils.LogUtil;
 import com.taihuoniao.fineix.tv.utils.QrCodeUtil;
+import com.taihuoniao.fineix.tv.utils.SPUtil;
+import com.taihuoniao.fineix.tv.utils.TypeConversionUtils;
 import com.taihuoniao.fineix.tv.view.autoScrollViewpager.ScrollableView;
 import com.taihuoniao.fineix.tv.view.autoScrollViewpager.ViewPagerAdapter;
 
@@ -40,6 +42,7 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
     private ViewPagerAdapter<String> viewPagerAdapter;
     private BuyGoodDetailsBean mbuyGoodDetailsBean;
     private Bitmap qrCodeBitmap;
+    private long intervalWaitTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,9 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
             layoutParams.height = layoutParams.width * 422 / 750;
             holder.scrollableView.setLayoutParams(layoutParams);
         }
+
+        // 获取自动轮播间隔时间
+        readSettingInformation();
     }
 
     @Override
@@ -89,7 +95,7 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
             holder.scrollableView.setAdapter(viewPagerAdapter.setInfiniteLoop(true));
             holder.scrollableView.setOnPageChangeListener(this);
             holder.scrollableView.setAutoScrollDurationFactor(8);
-            holder.scrollableView.setInterval(4000);
+            holder.scrollableView.setInterval((int) intervalWaitTime);
             holder.scrollableView.showIndicators();
 //            holder.scrollableView.start();
             refreshUi(viewPagerDataBeans.get(0).getInfoBean());
@@ -331,5 +337,15 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
             list.add(viewPagerDataBean);
         }
         return list;
+    }
+
+    private void readSettingInformation() {
+        String autoEventWaitTime2 = SPUtil.read(CommonConstants.INTERVAL_WAIT_TIME);
+        if (TypeConversionUtils.StringConvertDouble(autoEventWaitTime2) > 0) {
+            intervalWaitTime = (long) (TypeConversionUtils.StringConvertDouble(autoEventWaitTime2) * 1000D);
+        } else {
+            intervalWaitTime = CommonConstants.DELAYMILLIS_INTERVAL_TIME;
+        }
+        LogUtil.e(TAG, " -----Setting readSettingInformation----intervalWaitTime: " + intervalWaitTime);
     }
 }
