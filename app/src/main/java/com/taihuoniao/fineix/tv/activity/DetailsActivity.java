@@ -10,9 +10,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
-import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.View;
 
 import com.google.gson.reflect.TypeToken;
 import com.taihuoniao.fineix.tv.R;
@@ -66,7 +65,7 @@ public class DetailsActivity extends BaseActivity {
     private long mTimeSpace;
     private int categoryIndex; //分类索引
     private int idIndex; //di索引
-    private long autoEventWaitTime;
+    private int autoEventWaitTime;
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -504,10 +503,10 @@ public class DetailsActivity extends BaseActivity {
 
     private void readSettingInformation() {
         String autoEventWaitTime2 = SPUtil.read(CommonConstants.AUTO_EVENT_WAIT_TIME);
-        if (TypeConversionUtils.StringConvertDouble(autoEventWaitTime2) > 0) {
-            autoEventWaitTime = (long) (TypeConversionUtils.StringConvertDouble(autoEventWaitTime2) * 1000D);
+        if (!TextUtils.isEmpty(autoEventWaitTime2)) {
+            autoEventWaitTime = (TypeConversionUtils.StringConvertInt(autoEventWaitTime2) * 1000 * 60); //分钟
         } else {
-            autoEventWaitTime = CommonConstants.DELAYMILLIS_DETAILSPAGE;
+            autoEventWaitTime = CommonConstants.AUTO_EVENT_WAIT_TIMES * 1000 * 60;
         }
         LogUtil.e(TAG, " -----Setting readSettingInformation----autoEventWaitTime: " + autoEventWaitTime);
     }

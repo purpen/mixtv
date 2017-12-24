@@ -17,9 +17,10 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-10dp"
-        android:layout_height="95.5dp">
+        android:layout_height="wrap_content">
+
         <LinearLayout
             android:id="@+id/imageView_logout"
             android:layout_width="wrap_content"
@@ -27,25 +28,26 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:nextFocusLeft="@+id/imageView_reverse"
             android:background="@mipmap/icon_logout"
+            android:gravity="center_vertical"
             android:focusable="true"
-            android:gravity="center_vertical">
+            android:nextFocusLeft="@+id/imageView_reverse"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:src="@mipmap/icon_logout"
-                android:visibility="gone"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:layout_height="wrap_content" />
+                android:src="@mipmap/icon_logout"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="wrap_content"
-                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                android:layout_marginLeft="6dp"
-                android:layout_height="wrap_content" />
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,26 +56,42 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:nextFocusRight="@+id/imageView_logout"
             android:layout_toLeftOf="@+id/imageView_logout"
             android:background="@mipmap/icon_reverse_screen"
-            android:focusable="true"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:nextFocusRight="@+id/imageView_logout"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:src="@mipmap/icon_reverse_screen"
-                android:visibility="gone"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:layout_height="wrap_content" />
+                android:src="@mipmap/icon_reverse_screen"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                android:layout_marginLeft="7dp"
-                android:visibility="gone"
-                android:layout_height="wrap_content" />
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/imageView_main_titleBar_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="20dp"
+            android:focusable="true"
+            android:layout_toLeftOf="@+id/imageView_reverse"
+            android:nextFocusRight="@+id/imageView_reverse"
+            android:background="@drawable/background_focued_setting_icon"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

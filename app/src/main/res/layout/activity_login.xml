@@ -53,7 +53,7 @@
                 android:layout_marginTop="0dp"
                 android:background="@drawable/shape_login_register"
                 android:hint="密码"
-                android:inputType="textPassword|numberPassword"
+                android:inputType="textPassword"
                 android:maxLength="50"
                 android:maxLines="1"
                 android:paddingLeft="8dp"

@@ -60,6 +60,7 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
     private ViewPager mViewPager; // 内容页面
     private LinearLayout imageViewReverse;
     private LinearLayout imageViewLogout;
+    private LinearLayout imageViewSetting;
 
     private List<String> mStringList;
     private List<BaseFragment> mBaseFragments;
@@ -71,7 +72,7 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
     private int columns = 5;
     private WaittingDialog mDialog;
     private Handler mHandler = new Handler(Looper.getMainLooper());
-    private long autoEventWaitTime;
+    private int autoEventWaitTime;
 
 
     public MyCustomLinearLayout(Context context) {
@@ -104,11 +105,13 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
 
         imageViewReverse = (LinearLayout) mRelativeLayout.findViewById(R.id.imageView_reverse);
         imageViewLogout = (LinearLayout) mRelativeLayout.findViewById(R.id.imageView_logout);
+        imageViewSetting = (LinearLayout) mRelativeLayout.findViewById(R.id.imageView_main_titleBar_setting);
 
         imageViewReverse.setOnFocusChangeListener(this);
         imageViewLogout.setOnFocusChangeListener(this);
         imageViewReverse.setOnClickListener(this);
         imageViewLogout.setOnClickListener(this);
+        imageViewSetting.setOnClickListener(this);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager((FragmentActivity)mContext, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -185,7 +188,7 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
                         LogUtil.e(TAG, "--------------> dispatchKeyEvent() 按上键");
                         View viewByPosition = mRecyclerView.getLayoutManager().findViewByPosition(titleRecyclerViewAdapter.getLastSelectedPosition());
                         titleRecyclerViewAdapter.setIndicatorSelectedPosition(viewByPosition);
-                        imageViewReverse.requestFocus();
+                        imageViewSetting.requestFocus();
                         return true;
                     }
                     break;
@@ -241,10 +244,12 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
     @Override
     public void onClick(View v) {
         if (v == imageViewReverse) {
-            ToastUtil.showInfo("暂不支持竖屏操作！");
-//            getContext().startActivity(new Intent(getContext(), SettingActivity.class));
+//            ToastUtil.showInfo("暂不支持竖屏操作！");
+            getContext().startActivity(new Intent(getContext(), SettingActivity.class));
         } else if (v == imageViewLogout) {
-            requetLogout();
+//            requetLogout();
+        } else if (v == imageViewSetting) {
+            getContext().startActivity(new Intent(getContext(), SettingActivity.class));
         }
     }
 
@@ -285,42 +290,6 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
             }
         }
         return false;
-    }
-
-    /**
-     * 退出登录请求
-     */
-    private void requetLogout(){
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("from_to", "2");
-        OkHttpUtil.sendRequest(URL.AUTH_LOGOUT, params, new HttpRequestCallback(){
-            @Override
-            public void onStart() {
-                if (mDialog != null) mDialog.show();
-                super.onStart();
-            }
-
-            @Override
-            public void onSuccess(String json) {
-                mDialog.dismiss();
-                if (TextUtils.isEmpty(json)) return;
-                HttpResponseBean response = JsonUtil.fromJson(json, HttpResponseBean.class);
-                if (response.isSuccess()) {//   退出成功跳转首页
-                    ToastUtil.showSuccess("退出成功");
-                    SPUtil.remove(CommonConstants.LOGIN_INFO);
-                    mContext.startActivity(new Intent(mContext, ActivityLogin.class));
-                    ((FragmentActivity)mContext).finish();
-                } else {
-                    ToastUtil.showError(response.getMessage());
-                }
-            }
-
-            @Override
-            public void onFailure(IOException e) {
-                mDialog.dismiss();
-                ToastUtil.showError(R.string.network_err);
-            }
-        });
     }
 
     /**
@@ -496,10 +465,10 @@ public class MyCustomLinearLayout extends LinearLayout implements View.OnFocusCh
 
     private void readSettingInformation() {
         String autoEventWaitTime2 = SPUtil.read(CommonConstants.AUTO_EVENT_WAIT_TIME);
-        if (TypeConversionUtils.StringConvertDouble(autoEventWaitTime2) > 0) {
-            autoEventWaitTime = (long) (TypeConversionUtils.StringConvertDouble(autoEventWaitTime2) * 1000D);
+        if (!TextUtils.isEmpty(autoEventWaitTime2)) {
+            autoEventWaitTime = (TypeConversionUtils.StringConvertInt(autoEventWaitTime2) * 1000 * 60);
         } else {
-            autoEventWaitTime = CommonConstants.DELAYMILLIS_MAINPAGE;
+            autoEventWaitTime = CommonConstants.AUTO_EVENT_WAIT_TIMES  * 1000 * 60;
         }
         LogUtil.e(TAG, " -----Setting readSettingInformation----autoEventWaitTime: " + autoEventWaitTime);
     }

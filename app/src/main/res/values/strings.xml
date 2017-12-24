@@ -25,4 +25,9 @@
     <string name="network_err">网络错误</string>
     <string name="product_bright">推荐理由</string>
     <string name="detail_introduct">详情</string>
+
+    <!--轮播时间设置-->
+    <string name="autoEvenWaitTimes">$分钟</string>
+    <string name="intervalWaitTimes">$秒</string>
+
 </resources>

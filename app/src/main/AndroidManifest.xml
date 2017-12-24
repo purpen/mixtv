@@ -45,7 +45,7 @@
 
         <activity android:name="com.taihuoniao.fineix.tv.activity.DetailsActivity" android:theme="@style/NoTitleFullscreen" android:launchMode="singleTask"/>
         <activity android:name="com.taihuoniao.fineix.tv.activity.ActivityLogin" android:theme="@style/NoTitleFullscreen" android:launchMode="singleTask"/>
-        <activity android:name="com.taihuoniao.fineix.tv.activity.SettingActivity" android:theme="@style/NoTitleFullscreen"/>
+        <activity android:name="com.taihuoniao.fineix.tv.activity.SettingActivity" android:theme="@style/AppTheme2"/>
 
         <!--<receiver android:name=".ScreenSaverBroadCastReceiver">-->
             <!--<intent-filter>-->

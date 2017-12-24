@@ -10,6 +10,8 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,7 +44,7 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
     private ViewPagerAdapter<String> viewPagerAdapter;
     private BuyGoodDetailsBean mbuyGoodDetailsBean;
     private Bitmap qrCodeBitmap;
-    private long intervalWaitTime;
+    private int intervalWaitTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
         holder = new ViewHolder(header);
         return header;
     }
+
 
     @Override
     protected void initList() {
@@ -95,7 +98,7 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
             holder.scrollableView.setAdapter(viewPagerAdapter.setInfiniteLoop(true));
             holder.scrollableView.setOnPageChangeListener(this);
             holder.scrollableView.setAutoScrollDurationFactor(8);
-            holder.scrollableView.setInterval((int) intervalWaitTime);
+            holder.scrollableView.setInterval(intervalWaitTime);
             holder.scrollableView.showIndicators();
 //            holder.scrollableView.start();
             refreshUi(viewPagerDataBeans.get(0).getInfoBean());
@@ -194,11 +197,11 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
      */
     public void showProductQrCode(){
         stopAutoScroll();
-        ImageView linearLayout = getQrCodeImageView();
-        linearLayout.setImageBitmap(qrCodeBitmap);
+        ImageView codeImageView = getQrCodeImageView();
+        codeImageView.setImageBitmap(qrCodeBitmap);
         if (mDialog == null) {
             mDialog = new Dialog(getActivity(), R.style.ProductQRCodeDialog);
-            mDialog.setContentView((View) linearLayout.getParent());
+            mDialog.setContentView((LinearLayout) codeImageView.getParent());
             mDialog.setCanceledOnTouchOutside(true);
         }
         if (!mDialog.isShowing()) {
@@ -241,6 +244,8 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER);
         linearLayout.addView(qrCodeImageView);
+        linearLayout.setMinimumWidth(getResources().getDisplayMetrics().widthPixels);
+        linearLayout.setMinimumHeight(getResources().getDisplayMetrics().heightPixels);
         linearLayout.addView(textView);
         return qrCodeImageView;
     }
@@ -341,10 +346,10 @@ public class DetailsFragment extends BaseFragment implements ScrollableView.OnPa
 
     private void readSettingInformation() {
         String autoEventWaitTime2 = SPUtil.read(CommonConstants.INTERVAL_WAIT_TIME);
-        if (TypeConversionUtils.StringConvertDouble(autoEventWaitTime2) > 0) {
-            intervalWaitTime = (long) (TypeConversionUtils.StringConvertDouble(autoEventWaitTime2) * 1000D);
+        if (!TextUtils.isEmpty(autoEventWaitTime2)) {
+            intervalWaitTime = (TypeConversionUtils.StringConvertInt(autoEventWaitTime2) * 1000); //秒
         } else {
-            intervalWaitTime = CommonConstants.DELAYMILLIS_INTERVAL_TIME;
+            intervalWaitTime = CommonConstants.INTERVAL_WAIT_TIMES * 1000;
         }
         LogUtil.e(TAG, " -----Setting readSettingInformation----intervalWaitTime: " + intervalWaitTime);
     }

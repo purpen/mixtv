@@ -2,120 +2,220 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1F292E"
+    android:background="@mipmap/bg_list_landscape"
     android:orientation="vertical">
 
-    <ImageView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="20dp"
-        android:src="@mipmap/ic_launcher" />
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="40dp"
+        android:drawableLeft="@mipmap/icon_back_default"
+        android:drawablePadding="15dp"
+        android:gravity="center_vertical"
+        android:text="设置界面"
+        android:textColor="#FAFAFA"
+        android:textSize="17sp"
+        android:textStyle="normal" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        android:paddingLeft="30dp">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="200dp"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="屏幕显示"
+            android:textColor="#FAFAFA"
+            android:textSize="17sp" />
 
         <LinearLayout
+            android:id="@+id/linearLayout_screen_display"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:gravity="center_vertical">
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/background_focued_setting_item"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:paddingRight="15dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="设置横竖屏，当前"
+                android:layout_marginLeft="15dp"
+                android:text="横竖屏切换"
                 android:textColor="#FFFFFF"
                 android:textSize="17sp" />
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1" />
+
             <TextView
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_focued_setting_item_left" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="#00000000"
-                android:gravity="center_vertical"
-                android:text="横屏"
+                android:gravity="center"
+                android:text="竖屏显示"
+                android:textColor="#FAFAFA"
                 android:textSize="17sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="设置成竖屏"
-                android:textColor="#FFFFFF"
-                android:textSize="17sp" />
-
+                android:background="@drawable/selector_focued_setting_item_right" />
         </LinearLayout>
 
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="轮播设置"
+            android:textColor="#FAFAFA"
+            android:textSize="17sp" />
+
         <LinearLayout
+            android:id="@+id/linearLayout_loop_setting_auto_start_wait_time"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:gravity="center_vertical">
+            android:layout_marginTop="15dp"
+            android:background="@drawable/background_focued_setting_item"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingRight="15dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="设置自动轮播等待时间"
+                android:layout_marginLeft="15dp"
+                android:text="自动轮播等待时间"
                 android:textColor="#FFFFFF"
                 android:textSize="17sp" />
 
-            <EditText
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/linearLayout_loop_setting_auto_start_wait_time_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_focued_setting_item_left" />
+
+            <TextView
                 android:id="@+id/editText_autoEvent_waitTime"
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="#00000000"
-                android:hint="10"
-                android:maxLength="4"
-                android:inputType="numberDecimal" />
+                android:gravity="center"
+                android:text="@string/autoEvenWaitTimes"
+                android:textColor="#FAFAFA"
+                android:textSize="17sp" />
 
             <TextView
+                android:id="@+id/linearLayout_loop_setting_auto_start_wait_time_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="秒"
-                android:textColor="#FFFFFF"
-                android:textSize="17sp" />
+                android:background="@drawable/selector_focued_setting_item_right" />
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayout_loop_setting_start_next_wait_time"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:gravity="center_vertical">
+            android:layout_marginTop="10dp"
+            android:background="@drawable/background_focued_setting_item"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:paddingRight="15dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="设置轮播下一页等待时间"
+                android:layout_marginLeft="15dp"
+                android:text="轮播下一页等待时间"
                 android:textColor="#FFFFFF"
                 android:textSize="17sp" />
 
-            <EditText
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/linearLayout_loop_setting_start_next_wait_time_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_focued_setting_item_left" />
+
+            <TextView
                 android:id="@+id/editText_Interval_waitTime"
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="#00000000"
-                android:hint="4"
-                android:maxLength="4"
-                android:inputType="numberDecimal"
+                android:gravity="center"
+                android:text="@string/intervalWaitTimes"
+                android:textColor="#FAFAFA"
                 android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/linearLayout_loop_setting_start_next_wait_time_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_focued_setting_item_right" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/background_focued_setting_item"
+            android:focusable="true"
+            android:gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="秒"
-                android:textColor="#FFFFFF"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"
+                android:drawableLeft="@mipmap/icon_logout"
+                android:drawablePadding="12dp"
+                android:gravity="center"
+                android:text="退出当前账户"
+                android:textColor="#FAFAFA"
                 android:textSize="17sp" />
 
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>

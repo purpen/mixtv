@@ -23,9 +23,8 @@ public class CommonConstants {
     public static final String BROADCAST_FILTER_AUTO_LOAD_DATA = "AutoLoadNextData";
     public static final String BROADCAST_FILTER_ONLY_LOAD_ONE = "AutoLoadOneData";
 
-    public static final long DELAYMILLIS_MAINPAGE = 1000 * 10;
-    public static final long DELAYMILLIS_DETAILSPAGE = 1000 * 10;
-    public static final long DELAYMILLIS_INTERVAL_TIME = 1000 * 4;
+    public static final int AUTO_EVENT_WAIT_TIMES = 5; //默认5分钟
+    public static final int INTERVAL_WAIT_TIMES = 5; //默认5秒钟
 
     /**
      * 测试帐号
