@@ -1,10 +1,14 @@
 package com.taihuoniao.fineix.tv.activity;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,6 +61,7 @@ public class SettingActivity extends BaseActivity {
         mDialog = new WaittingDialog(this);
         mDialog.show();
         initViews();
+        setListener();
         readSettingInformation();
     }
 
@@ -74,7 +79,6 @@ public class SettingActivity extends BaseActivity {
 
         linearLayoutLogout = (LinearLayout) findViewById(R.id.linearLayout_logout);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -281,6 +285,17 @@ public class SettingActivity extends BaseActivity {
             public void onFailure(IOException e) {
                 mDialog.dismiss();
                 ToastUtil.showError(R.string.network_err);
+            }
+        });
+    }
+
+    private void setListener() {
+        linearLayoutLogout.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                TextView childAt = (TextView) linearLayoutLogout.getChildAt(0);
+                childAt.setTextColor(Color.parseColor(hasFocus ? "#FFFFFFFF" : "#66FFFFFF"));
+                childAt.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(hasFocus ? R.mipmap.icon_setting_logout : R.mipmap.icon_setting_logout_normal), null, null, null);
             }
         });
     }

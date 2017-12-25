@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/bg_list_landscape"
+    android:background="@mipmap/bg_list_landscape">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#88000000"
     android:orientation="vertical">
 
     <TextView
@@ -37,7 +42,7 @@
         <LinearLayout
             android:id="@+id/linearLayout_screen_display"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="15dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/background_focued_setting_item"
@@ -93,7 +98,7 @@
         <LinearLayout
             android:id="@+id/linearLayout_loop_setting_auto_start_wait_time"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/background_focued_setting_item"
             android:focusable="true"
@@ -145,7 +150,7 @@
         <LinearLayout
             android:id="@+id/linearLayout_loop_setting_start_next_wait_time"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/background_focued_setting_item"
             android:focusable="true"
@@ -196,10 +201,10 @@
         <LinearLayout
             android:id="@+id/linearLayout_logout"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_marginTop="30dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/background_focued_setting_item"
+            android:background="@drawable/background_focued_setting_logout"
             android:focusable="true"
             android:gravity="center">
 
@@ -208,14 +213,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="100dp"
                 android:layout_marginRight="100dp"
-                android:drawableLeft="@mipmap/icon_logout"
+                android:drawableLeft="@mipmap/icon_setting_logout"
                 android:drawablePadding="12dp"
                 android:gravity="center"
                 android:text="退出当前账户"
-                android:textColor="#FAFAFA"
+                android:textColor="#66FFFFFF"
                 android:textSize="17sp" />
 
         </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
+
+
+</FrameLayout>
