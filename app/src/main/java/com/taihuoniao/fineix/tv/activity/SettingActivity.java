@@ -1,15 +1,11 @@
 package com.taihuoniao.fineix.tv.activity;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,7 +18,6 @@ import com.taihuoniao.fineix.tv.common.HttpRequestCallback;
 import com.taihuoniao.fineix.tv.common.URL;
 import com.taihuoniao.fineix.tv.common.WaittingDialog;
 import com.taihuoniao.fineix.tv.utils.JsonUtil;
-import com.taihuoniao.fineix.tv.utils.LogUtil;
 import com.taihuoniao.fineix.tv.utils.OkHttpUtil;
 import com.taihuoniao.fineix.tv.utils.SPUtil;
 import com.taihuoniao.fineix.tv.utils.ToastUtil;
@@ -82,7 +77,6 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        LogUtil.e(TAG, "---------onBackPressed()");
         saveSettingInformation();
     }
 
@@ -92,8 +86,6 @@ public class SettingActivity extends BaseActivity {
     private void readSettingInformation() {
         String autoEventWaitTime = SPUtil.read(CommonConstants.AUTO_EVENT_WAIT_TIME);
         String intervalWaitTime = SPUtil.read(CommonConstants.INTERVAL_WAIT_TIME);
-
-        LogUtil.e(TAG, " -----Setting readSettingInformation----autoEventWaitTime: " + autoEventWaitTime  + " | intervalWaitTime: " + intervalWaitTime);
         if (!TextUtils.isEmpty(autoEventWaitTime)) {
             getAutoEventWaitTimeIndex(autoEventWaitTime);
             CharSequence aautoEvenWaitTimes = getAautoEvenWaitTimes(autoEventWaitTimeValueIndex);
@@ -116,14 +108,8 @@ public class SettingActivity extends BaseActivity {
      * 保存设置信息
      */
     private void saveSettingInformation() {
-//        String aautoEvenWaitTimes = getAautoEvenWaitTimes(autoEventWaitTimeValueIndex);
-//        String intervalWaitTimes = getIntervalWaitTimes(intervalWaitTimesValueIndex);
         SPUtil.write(CommonConstants.AUTO_EVENT_WAIT_TIME, String.valueOf(autoEvenWaitTimes[autoEventWaitTimeValueIndex]));
         SPUtil.write(CommonConstants.INTERVAL_WAIT_TIME, String.valueOf(intervalWaitTimes[intervalWaitTimesValueIndex]));
-
-        String autoEventWaitTime = editTextAutoEventWaitTime.getText().toString();
-        String intervalWaitTime = editTextIntervalWaitTime.getText().toString();
-        LogUtil.e(TAG, "-----Setting saveSettingInformation----autoEventWaitTime: " + autoEventWaitTime  + " | intervalWaitTime: " + intervalWaitTime);
         clearAllActivityExceptCurrent(this);
         startActivity(new Intent(this, MainActivity.class));
         finish();
@@ -274,6 +260,7 @@ public class SettingActivity extends BaseActivity {
                 if (response.isSuccess()) {//   退出成功跳转首页
                     ToastUtil.showSuccess("退出成功");
                     SPUtil.remove(CommonConstants.LOGIN_INFO);
+                    clearAllActivityExceptCurrent(SettingActivity.this);
                     startActivity(new Intent(SettingActivity.this, ActivityLogin.class));
                     SettingActivity.this.finish();
                 } else {

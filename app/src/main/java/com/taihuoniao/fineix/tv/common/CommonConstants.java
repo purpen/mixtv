@@ -19,7 +19,6 @@ public class CommonConstants {
     public static final int SCREENORIENTATION_LANDSCAPE_COLUMNS = 5;
     public static final int SCREENORIENTATION_PORTRAIT_COLUMNS = 3;
 
-    public static final String BROADCAST_FILTER = "AutoKeyEvent";
     public static final String BROADCAST_FILTER_AUTO_LOAD_DATA = "AutoLoadNextData";
     public static final String BROADCAST_FILTER_ONLY_LOAD_ONE = "AutoLoadOneData";
 

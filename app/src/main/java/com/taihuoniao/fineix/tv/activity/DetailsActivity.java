@@ -52,19 +52,19 @@ public class DetailsActivity extends BaseActivity {
     private boolean isNeedLoadNextData;
     private boolean isAutoScroll;
 
-    private static final int FIND_INDEX_BY_ID = 0x10010;
-    private static final int FIRST_ITME = 0x10011;
-    private static final int LAST_ITME = 0x10012;
-    private static final int LOAD_ID_LOADING = 0x20001;
-    private static final int LOAD_ID_FINISHED = 0x20000;
-    private static final int LOAD_CATEGORY_LOADING = 0x20002;
-    private static final int LOAD_CATEGORY_FINISH = 0x20003;
-    private static int DEFAULT_LOAD_ITEM_COUNT = 3; //默认加载三个产品
+    private static final int FIND_INDEX_BY_ID           = 0x10010;  // 通过ID找下标
+    private static final int FIRST_ITME                 = 0x10011;  // 加载分类下的第一条
+    private static final int LAST_ITME                  = 0x10012;  // 加载分类下的最后一条
+    private static final int LOAD_ID_LOADING            = 0x20001;  // 加载ID 开始
+    private static final int LOAD_ID_FINISHED           = 0x20000;  // 加载ID 结束
+    private static final int LOAD_CATEGORY_LOADING      = 0x20002;  // 加载分类开始
+    private static final int LOAD_CATEGORY_FINISH       = 0x20003;  // 加载分类结束
+    private static int DEFAULT_LOAD_ITEM_COUNT          = 3;  //默认加载三个产品
     private int loadStatus;
     private long mTimeLast;
     private long mTimeSpace;
-    private int categoryIndex; //分类索引
-    private int idIndex; //di索引
+    private int categoryIndex;  //分类索引
+    private int idIndex;        //di索引
     private int autoEventWaitTime;
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){

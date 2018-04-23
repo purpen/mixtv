@@ -13,6 +13,7 @@ import com.taihuoniao.fineix.tv.R;
 import com.taihuoniao.fineix.tv.base.BaseActivity;
 import com.taihuoniao.fineix.tv.bean.HttpResponseBean;
 import com.taihuoniao.fineix.tv.bean.LoginInfoBean;
+import com.taihuoniao.fineix.tv.common.ApiHelper;
 import com.taihuoniao.fineix.tv.common.CommonConstants;
 import com.taihuoniao.fineix.tv.common.HttpRequestCallback;
 import com.taihuoniao.fineix.tv.common.URL;
@@ -73,24 +74,10 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener 
     }
 
     /**
-     * 接口参数
-     * @param phone 手机号
-     * @param password 密码
-     * @return
-     */
-    public static HashMap<String, Object> getclickLoginNetRequestParams(String phone, String password) {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("mobile", phone);
-        params.put("from_to", "2");     //登录渠道
-        params.put("password", password);
-        return params;
-    }
-
-    /**
      * 请求登陆接口
      */
     private void requeLoginApi(String phone, String password) {
-        HashMap<String, Object> params = getclickLoginNetRequestParams(phone, password);
+        HashMap<String, Object> params = ApiHelper.getclickLoginNetRequestParams(phone, password);
         OkHttpUtil.sendRequest(URL.AUTH_LOGIN, params, new HttpRequestCallback(){
             @Override
             public void onStart() {

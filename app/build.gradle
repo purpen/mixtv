@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'd3in_tv'
+            keyPassword '123456'
+            storeFile file('C:/Users/Stephen/Desktop/keystore/d3in_tv.jks')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion '27.0.0'
     defaultConfig {
@@ -9,35 +17,31 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "0.8"
-//        javaCompileOptions {
-//            annotationProcessorOptions {
-//                includeCompileClasspath false
-//            }
-//        }
+        buildConfigField "boolean", "LOG_DEBUG", "true"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            signingConfig signingConfigs.release
         }
     }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-//    implementation 'com.github.bumptech.glide:glide:3.8.0'
-//    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
-    compile 'com.squareup.okio:okio:1.13.0'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.android.support:design:25.0.0'
-    compile 'com.android.support:support-v4:25.0.0'
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:recyclerview-v7:25.0.0'
-    compile 'com.google.zxing:core:3.3.0'
-    compile 'com.jakewharton:butterknife:8.4.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.yanzhenjie:permission:1.0.5'
-    compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
-    compile 'com.jakewharton:butterknife:7.0.1'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.squareup.okhttp3:okhttp:3.2.0'
+    implementation 'com.squareup.okio:okio:1.13.0'
+    implementation 'com.google.code.gson:gson:2.7'
+    implementation 'com.android.support:design:25.0.0'
+    implementation 'com.android.support:support-v4:25.0.0'
+    implementation 'com.android.support:appcompat-v7:25.0.0'
+    implementation 'com.android.support:recyclerview-v7:25.0.0'
+    implementation 'com.google.zxing:core:3.3.0'
+    implementation 'com.jakewharton:butterknife:8.4.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.yanzhenjie:permission:1.0.5'
+    implementation 'com.readystatesoftware.systembartint:systembartint:1.0.4'
+    implementation 'com.jakewharton:butterknife:7.0.1'
 }

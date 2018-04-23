@@ -2,6 +2,7 @@ package com.taihuoniao.fineix.tv.utils;
 
 import android.util.Log;
 
+import com.taihuoniao.fineix.tv.BuildConfig;
 
 
 /**
@@ -10,7 +11,7 @@ import android.util.Log;
  */
 public class LogUtil {
     private static final String TAG = "D3IN_TV";
-    private static final boolean DEV_MODE = true;
+    private static final boolean DEV_MODE = BuildConfig.LOG_DEBUG;
     private static final int LOG_MAXLENGTH  = 2000;
 
     public static void i(String tag, String msg) {

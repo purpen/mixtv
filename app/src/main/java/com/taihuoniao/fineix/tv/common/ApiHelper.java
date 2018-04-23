@@ -48,4 +48,18 @@ public class ApiHelper {
         params.put("id", id);
         return params;
     }
+
+    /**
+     * 接口参数
+     * @param phone 手机号
+     * @param password 密码
+     * @return
+     */
+    public static HashMap<String, Object> getclickLoginNetRequestParams(String phone, String password) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("mobile", phone);
+        params.put("from_to", "2");     //登录渠道
+        params.put("password", password);
+        return params;
+    }
 }
